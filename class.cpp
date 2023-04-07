@@ -56,6 +56,7 @@ Entity::Entity(const int &x, const int &y)
     is_controlled_ = -1;
 }
 
+// for reuse code
 Entity::Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled)
 {
     id_ = id;
