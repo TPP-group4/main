@@ -19,12 +19,21 @@ class Pos
 class Entity
 {
     private:
-        int id_;
-        int type_;
         int x_;
         int y_;
+
+    protected:
+        int id_;
+        int type_;
         int shield_life_;
         int is_controlled_;
+    
+    public:
+        Entity(int id, int type, int x, int y, int shield_life, int is_controlled);
+        const int get_X() const { return x_; };
+        const int get_Y() const { return y_; };
+
+        // operator overloading for computing distance between two entities
         double operator-(const Entity &other)
         {
             int x = x_ - other.x_;
@@ -33,13 +42,6 @@ class Entity
             y *= y;
             return sqrt(x + y);
         }
-    public:
-        Entity(int id, int type, int x, int y, int shield_life, int is_controlled);
-        const int get_ID() const { return id_; };
-        const int get_X() const { return x_; };
-        const int get_Y() const { return y_; };
-        const int get_ShieldLife() const { return shield_life_; };
-        const int get_IsControlled() const { return is_controlled_; };
 };
 
 Entity::Entity(int id, int type, int x, int y, int shield_life, int is_controlled)
@@ -75,6 +77,9 @@ public:
     const int get_VY() const { return vy_; };
     const int get_NearBase() const { return nearBase_; };
     const int get_ThreatFor() const { return threatFor_; };
+    const int get_ID() const { return id_; };
+    const int get_ShieldLife() const { return shield_life_; };
+    const int get_IsControlled() const { return is_controlled_; };
 private:
     int health_;
     int vx_;
