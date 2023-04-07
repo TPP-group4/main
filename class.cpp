@@ -170,11 +170,33 @@ int main()
             {
                 Hero tmp(id, type, x, y, shield_life, is_controlled);
                 my_heros.emplace_back(tmp);
-
+                // 要解構嗎不曉得?
             }
             else if(type == 2)
             {
-
+                Hero tmp(id, type, x, y, shield_life, is_controlled);
+                enemy_heros.emplace_back(tmp);
+            }
+            else if(type == 0)
+            {
+                // 1=your base, 2=your opponent's base, 0=neither
+                switch (threat_for)
+                {
+                    case 0:
+                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+                        neutral_monsters.emplace_back(tmp);
+                        break;
+                    case 1:
+                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+                        my_monsters.emplace_back(tmp);
+                        break;
+                    case 2:
+                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+                        enemy_monsters.emplace_back(tmp);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
