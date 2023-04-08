@@ -10,10 +10,11 @@ using namespace std;
 class Pos
 {
     public:
-        const int get_x() const { return loc_.first; };
-        const int get_y() const { return loc_.second; };
+        const int get_x() const { return x_; };
+        const int get_y() const { return y_; };
     private:
-        pair<int, int> loc_;
+        int x_;
+        int y_;
 };
 
 class Entity
