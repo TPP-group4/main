@@ -47,6 +47,15 @@ class Entity
         }
 };
 
+Entity::Entity()
+{
+    id_ = -1;
+    type_ = -1;
+    x_ = -1;
+    y_ = -1;
+    shield_life_ = -1;
+    is_controlled_ = -1;
+}
 // for base
 Entity::Entity(const int &x, const int &y)
 {
@@ -73,16 +82,22 @@ Entity::Entity(const int &id, const int &type, const int &x, const int &y, const
 class Hero : public Entity
 {
     public:
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
+        Hero() : Entity() {};
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) {};
     private:
         // 不知道hero要不要其他的資訊
         // 比如：一開始的位置之類的
 };
 
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
-{
+// Hero::Hero()
+// {
 
-};
+// };
+
+// Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
+// {
+
+// };
 
 class Monsters : public Entity
 {
@@ -104,6 +119,15 @@ private:
     int nearBase_;
     int threatFor_;
 };
+
+Monsters::Monsters():Entity()
+{
+    health_ = -1;
+    vx_ = -1;
+    vy_ = -1;
+    nearBase_ = -1;
+    threatFor_ = -1;
+}
 
 Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled)
 {
