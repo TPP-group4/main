@@ -30,6 +30,7 @@ class Entity
         int is_controlled_;
     
     public:
+        Entity();
         Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
         Entity(const int &x, const int &y);
         const int get_X() const { return x_; };
@@ -86,6 +87,7 @@ Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int
 class Monsters : public Entity
 {
 public:
+    Monsters();
     Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
     const int get_Health() const { return health_; };
     const int get_VX() const { return vx_; };
@@ -111,6 +113,25 @@ Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, c
     nearBase_ = nearBase;
     threatFor_ = threatFor;
 }
+class Player{
+    Entity Base;
+
+    public :
+    Player();
+    Monsters find_nearest_monster(vector<Monsters> M){
+        Monsters m;
+        int cnt = M.capacity();
+        int distance = INFINITY;
+        for(int i=0 ; i<cnt; i++){
+            if (M[i]-Base < distance){
+                distance = M[i]-Base ;
+                m = M[i];
+            }
+        }
+        return m;
+    }
+
+};
 
 int main()
 {
