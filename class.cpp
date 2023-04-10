@@ -189,8 +189,11 @@ namespace Player{
         return;
     }
 
-    void sort(){
-
+    void sort_monsters(){
+        sort(my_monsters.begin(), my_monsters.end(), compare);
+    }
+    bool compare(Entity first, Entity second){
+        return first-Player::my_Base < second-Player::my_Base;
     }
 
     bool enemyHeroNear(){
