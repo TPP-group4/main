@@ -27,7 +27,6 @@ class Entity
         const int get_Y() const { return y_; };
         const int get_ShieldLife() const { return shield_life_; };
 
-
         // operator overloading for computing distance between two entities
         double operator-(const Entity &other)const{
             int x = x_ - other.x_;
