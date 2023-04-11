@@ -6,17 +6,6 @@
 
 using namespace std;
 
-// 也許彥儒是這個意思，這部分更詳細的東西要再討論
-class Pos
-{
-    public:
-        const int get_x() const { return x_; };
-        const int get_y() const { return y_; };
-    private:
-        int x_;
-        int y_;
-};
-
 class Entity
 {
     private:
