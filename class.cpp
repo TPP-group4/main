@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 using namespace std;
 
@@ -24,10 +25,11 @@ class Entity
         Entity(const int &x, const int &y);
         const int get_X() const { return x_; };
         const int get_Y() const { return y_; };
+        const int get_ShieldLife() const { return shield_life_; };
+
 
         // operator overloading for computing distance between two entities
-        double operator-(const Entity &other)
-        {
+        double operator-(const Entity &other)const{
             int x = x_ - other.x_;
             int y = y_ - other.y_;
             x *= x;
@@ -36,6 +38,15 @@ class Entity
         }
 };
 
+Entity::Entity()
+{
+    id_ = -1;
+    type_ = -1;
+    x_ = -1;
+    y_ = -1;
+    shield_life_ = -1;
+    is_controlled_ = -1;
+}
 // for base
 Entity::Entity(const int &x, const int &y)
 {
@@ -62,16 +73,22 @@ Entity::Entity(const int &id, const int &type, const int &x, const int &y, const
 class Hero : public Entity
 {
     public:
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
+        Hero() : Entity() {};
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) {};
     private:
         // 不知道hero要不要其他的資訊
         // 比如：一開始的位置之類的
 };
 
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
-{
+// Hero::Hero()
+// {
 
-};
+// };
+
+// Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
+// {
+
+// };
 
 class Monsters : public Entity
 {
@@ -84,7 +101,6 @@ public:
     const int get_NearBase() const { return nearBase_; };
     const int get_ThreatFor() const { return threatFor_; };
     const int get_ID() const { return id_; };
-    const int get_ShieldLife() const { return shield_life_; };
     const int get_IsControlled() const { return is_controlled_; };
 private:
     int health_;
@@ -94,6 +110,15 @@ private:
     int threatFor_;
 };
 
+Monsters::Monsters():Entity()
+{
+    health_ = -1;
+    vx_ = -1;
+    vy_ = -1;
+    nearBase_ = -1;
+    threatFor_ = -1;
+}
+
 Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled)
 {
     health_ = health;
@@ -102,67 +127,125 @@ Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, c
     nearBase_ = nearBase;
     threatFor_ = threatFor;
 }
-class Player{
-    Entity Base;
 
-    public :
-    Player();
-    Monsters find_nearest_monster(vector<Monsters> M){
-        Monsters m;
-        int cnt = M.capacity();
-        int distance = INFINITY;
-        for(int i=0 ; i<cnt; i++){
-            if (M[i]-Base < distance){
-                distance = M[i]-Base ;
-                m = M[i];
-            }
-        }
-        return m;
-    }
-
+class action{
+    public:
+        string option = "WAIT";
+        int id = -1;
+        pair<int, int> pos = make_pair(-1,-1);
 };
 
-int main()
-{
-    // The corner of the map representing your base
-    int base_x; 
-    int base_y;
-    cin >> base_x >> base_y; cin.ignore();
-
-    // 判斷base在哪
-    if(base_x == 0)
-    {
-        Entity enemy_Base(176300, 9000);
-        Entity my_Base(0, 0);
-    }
-    else
-    {
-        Entity my_Base(176300, 9000);
-        Entity enemy_Base(0, 0);
-    }
-    
-    // Always 3
-    int heroes_per_player;                      
-    cin >> heroes_per_player; cin.ignore();
+namespace Player{
+    Entity my_Base;
+    Entity enemy_Base;
 
     vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
     vector<Monsters> enemy_monsters;
     vector<Monsters> neutral_monsters;
+    int my_health, my_mana;
+    int enemy_health, enemy_mana;
+
+    Monsters find_nearest_monster(Entity e,vector<Monsters> M){
+        Monsters m;
+        int distance = INT32_MAX;
+        for(auto monster : M ){
+            if (monster-e < distance){
+                distance = monster - e ;
+                m = monster;
+            }
+        }
+        return m;
+    }
+
+    bool canWind (const Hero &a,const Entity &b){
+        return ( (a-b) < 1280 && my_mana > 10 && b.get_ShieldLife()==0 );
+    }
+    bool canControl(const Hero &a,const Entity &b){
+        return ( (a-b) < 2200 && my_mana > 10 && b.get_ShieldLife()==0 );
+    }
+    bool canShield(const Hero &a,const Entity &b){
+        return ( (a-b) < 2200 && my_mana > 10 && b.get_ShieldLife()==0 );
+    }
+
+    void clearVector(){
+        my_monsters.clear();
+        my_heros.clear();
+        enemy_heros.clear();
+        enemy_monsters.clear();
+        neutral_monsters.clear();
+        return;
+    }
+
+    void sort(){
+
+    }
+
+    bool enemyHeroNear(){
+
+    }
+
+    pair<int ,int > &windPos(){
+
+    }
+};
+ostream & operator <<(ostream &os, const action &a){
+    if( a.option == "WAIT" ){
+        os << a.option << endl;
+    }
+    else if( a.option == "WIND" ){
+        os << "SPELL " << a.option << " " << a.pos.first << " " << a.pos.first << endl;
+    }
+    else if( a.option == "CONTROL" ){
+        os << "SPELL " << a.option << " " << a.id << " " << a.pos.first << " " << a.pos.first << endl;
+    }
+    else if( a.option == "SHIELD" ){
+        os << "SPELL " << a.option << " " << a.id << endl;
+    }
+    else if( a.option == "MOVE" ){
+        os << "MOVE " << a.pos.first << " " << a.pos.second << endl;
+    }
+    else{
+        os << "WAIT" << endl;
+    }
+    return os;
+}
+
+int main()
+{
+    // The corner of the map representing your base
+    int base_x; 
+    int base_y;
+
+    //cin >> base_x >> base_y; cin.ignore();
+
+    // 判斷base在哪
+    if(base_x == 0)
+    {
+        Player::enemy_Base = Entity(176300, 9000);
+        Player::my_Base = Entity(0, 0);
+    }
+    else
+    {
+        Player::my_Base = Entity(176300, 9000);
+        Player::enemy_Base = Entity(0, 0);
+    }
+    
+    // Always 3
+    int heroes_per_player;                      
+    //cin >> heroes_per_player; cin.ignore();
 
     // game loop
     while(1)
     {
-        int my_health, my_mana;
-        int enemy_health, enemy_mana;
-
-        cin >> my_health >> my_mana; cin.ignore();
-        cin >> enemy_health >> enemy_mana; cin.ignore();
+       
+        // cin >> Player::my_health >> Player::my_mana; cin.ignore();
+        // cin >> Player::enemy_health >> Player::enemy_mana; cin.ignore();
 
         // Amount of heros and monsters you can see
         int entity_count;
-        cin >> entity_count; cin.ignore();
+        //cin >> entity_count; cin.ignore();
 
         for(int i = 0; i < entity_count; ++i)
         {
@@ -176,40 +259,42 @@ int main()
             int vx;                 // Trajectory of this monster
             int vy;
             int near_base;          // 0=monster with no target yet, 1=monster targeting a base
-            int threat_for;         // Given this monster's trajectory, is it a threat to 1=your base, 2=your opponent's base, 0=neither
+            int threat_for =0;         // Given this monster's trajectory, is it a threat to 1=your base, 2=your opponent's base, 0=neither
 
             if(type == 1)
             {
                 Hero tmp(id, type, x, y, shield_life, is_controlled);
-                my_heros.emplace_back(tmp);
+                Player::my_heros.emplace_back(tmp);
                 // 要解構嗎不曉得?
             }
             else if(type == 2)
             {
                 Hero tmp(id, type, x, y, shield_life, is_controlled);
-                enemy_heros.emplace_back(tmp);
+                Player::enemy_heros.emplace_back(tmp);
             }
             else if(type == 0)
             {
                 // 1=your base, 2=your opponent's base, 0=neither
+                Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
                 switch (threat_for)
                 {
                     case 0:
-                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-                        neutral_monsters.emplace_back(tmp);
+                        Player::neutral_monsters.emplace_back(tmp);
                         break;
                     case 1:
-                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-                        my_monsters.emplace_back(tmp);
+                        Player::my_monsters.emplace_back(tmp);
                         break;
                     case 2:
-                        Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-                        enemy_monsters.emplace_back(tmp);
+                        Player::enemy_monsters.emplace_back(tmp);
                         break;
                     default:
                         break;
                 }
             }
         }
+        action a;
+        a.option = "MOVE";
+        a.pos = make_pair(17630,9000);
+        cout << a;
     }
 }
