@@ -215,21 +215,22 @@ namespace Player{
 
     }
 
-    map<int, Entity> get_previous_info( const int &pre_num){
+    void get_previous_info( const int &pre_num, map<int, Entity> &info){
         if(pre_num > previous_info.size())
         {
-            //return false;
+            return;
         }
         else
         {
             auto it = next(previous_info.begin(), pre_num);
-            return *it;
+            info = *it;
+            return;
         }
 
     }
 
-    pair<int, int> find_wind_begin(){
-
+    pair<int, int> find_wind_starting_point(){
+        
     }
 
     bool enemyHeroNear(){
