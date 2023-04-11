@@ -5,6 +5,7 @@
 #include <cmath>
 #include <limits>
 #include <map>
+#include <list>
 
 using namespace std;
 
@@ -150,7 +151,7 @@ class action{
 namespace Player{
     Entity my_Base;
     Entity enemy_Base;
-    vector<map<int, Entity>> previous_info;
+    list<map<int, Entity>> previous_info;
     vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
@@ -195,6 +196,40 @@ namespace Player{
     }
     bool compare(Entity first, Entity second){
         return first-Player::my_Base < second-Player::my_Base;
+    }
+
+    void enable_previous_info( const int &clip){
+        map<int, Entity> tmp_map;
+        for(auto &e:my_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+        for(auto &e:enemy_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+        for(auto &e:neutral_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+
+        previous_info.push_front(tmp_map);
+        if(previous_info.size() > clip+1)
+        {
+            previous_info.pop_back();
+        }
+
+    }
+
+    map<int, Entity> get_previous_info( const int &pre_num){
+        if(pre_num > previous_info.size())
+        {
+            //return false;
+        }
+        else
+        {
+            auto it = next(previous_info.begin(), pre_num);
+            return *it;
+        }
+
+    }
+
+    pair<int, int> find_wind_begin(){
+
     }
 
     bool enemyHeroNear(){
