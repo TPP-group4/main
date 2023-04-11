@@ -37,7 +37,7 @@ class Entity
         const int get_X() const { return x_; };
         const int get_Y() const { return y_; };
         const int get_ShieldLife() const { return shield_life_; };
-
+        const int get_ID() const { return id_; };
 
         // operator overloading for computing distance between two entities
         double operator-(const Entity &other)const{
@@ -84,22 +84,20 @@ Entity::Entity(const int &id, const int &type, const int &x, const int &y, const
 class Hero : public Entity
 {
     public:
-        Hero() : Entity() {};
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) {};
+        Hero() : Entity() { is_near_myBase_ = false; };
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) { is_near_myBase_ = false; };
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, bool is_near_myBase);
+        bool isNearMyBase() const { return is_near_myBase_; };
+        void set_iSNearMyBase(bool is_near_myBase) { is_near_myBase_ = is_near_myBase; };
     private:
-        // 不知道hero要不要其他的資訊
-        // 比如：一開始的位置之類的
+        // 用於判斷對方 hero 是否在我方的base裡面
+        bool is_near_myBase_;
 };
 
-// Hero::Hero()
-// {
-
-// };
-
-// Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
-// {
-
-// };
+Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, bool is_near_myBase) : Entity(id, type, x, y, shield_life, is_controlled)
+{
+    is_near_myBase_ = is_near_myBase;
+};
 
 class Monsters : public Entity
 {
@@ -111,7 +109,6 @@ public:
     const int get_VY() const { return vy_; };
     const int get_NearBase() const { return nearBase_; };
     const int get_ThreatFor() const { return threatFor_; };
-    const int get_ID() const { return id_; };
     const int get_IsControlled() const { return is_controlled_; };
 private:
     int health_;
@@ -119,6 +116,7 @@ private:
     int vy_;
     int nearBase_;
     int threatFor_;
+    bool is_near_myBase_;
 };
 
 Monsters::Monsters():Entity()
@@ -193,14 +191,11 @@ namespace Player{
 
     }
 
-    bool enemyHeroNear(){
-
-    }
-
     pair<int ,int > &windPos(){
 
     }
 };
+
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
         os << a.option << endl;
@@ -281,6 +276,14 @@ int main()
             else if(type == 2)
             {
                 Hero tmp(id, type, x, y, shield_life, is_controlled);
+                if(hypot(Player::my_Base.get_X() - x, Player::my_Base.get_Y() - y) < 5000)
+                {
+                    tmp.set_iSNearMyBase(true);
+                }
+                else
+                {
+                    tmp.set_iSNearMyBase(false);
+                }
                 Player::enemy_heros.emplace_back(tmp);
             }
             else if(type == 0)
