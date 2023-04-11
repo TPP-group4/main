@@ -72,19 +72,19 @@ Entity::Entity(const int &id, const int &type, const int &x, const int &y, const
 class Hero : public Entity
 {
     public:
-        Hero() : Entity() { is_near_myBase_ = false; };
+        Hero() : Entity() { nearBase_ = -1; };
         Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) { is_near_myBase_ = false; };
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, bool is_near_myBase);
-        bool isNearMyBase() const { return is_near_myBase_; };
-        void set_iSNearMyBase(bool is_near_myBase) { is_near_myBase_ = is_near_myBase; };
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
+        void set_nearBase(const int& a) { nearBase_ = a; };
+        const int& get_nearBase() { return nearBase_; };
     private:
         // 用於判斷對方 hero 是否在我方的base裡面
-        bool is_near_myBase_;
+        int nearBase_;
 };
 
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, bool is_near_myBase) : Entity(id, type, x, y, shield_life, is_controlled)
+Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
 {
-    is_near_myBase_ = is_near_myBase;
+    nearBase_ = -1;
 };
 
 class Monsters : public Entity
