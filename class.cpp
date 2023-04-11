@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <map>
 
 using namespace std;
 
@@ -149,7 +150,7 @@ class action{
 namespace Player{
     Entity my_Base;
     Entity enemy_Base;
-
+    vector<map<int, Entity>> previous_info;
     vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
@@ -189,8 +190,11 @@ namespace Player{
         return;
     }
 
-    void sort(){
-
+    void sort_monsters(){
+        sort(my_monsters.begin(), my_monsters.end(), compare);
+    }
+    bool compare(Entity first, Entity second){
+        return first-Player::my_Base < second-Player::my_Base;
     }
 
     bool enemyHeroNear(){
