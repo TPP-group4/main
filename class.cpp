@@ -7,17 +7,6 @@
 
 using namespace std;
 
-// 也許彥儒是這個意思，這部分更詳細的東西要再討論
-class Pos
-{
-    public:
-        const int get_x() const { return x_; };
-        const int get_y() const { return y_; };
-    private:
-        int x_;
-        int y_;
-};
-
 class Entity
 {
     private:
@@ -37,7 +26,6 @@ class Entity
         const int get_X() const { return x_; };
         const int get_Y() const { return y_; };
         const int get_ShieldLife() const { return shield_life_; };
-        const int get_ID() const { return id_; };
 
         // operator overloading for computing distance between two entities
         double operator-(const Entity &other)const{
