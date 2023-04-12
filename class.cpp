@@ -191,7 +191,7 @@ namespace Player{
         return;
     }
 
-    void sort_monsters( vector<Monsters> &monsters, const int &opt){
+    void sort_monsters( vector<Monsters> &monsters, const int &opt=0){
         switch(opt)
         {
             case 0:
@@ -219,7 +219,7 @@ namespace Player{
         return first.get_Health() < second.get_Health();
     }
 
-    void enable_previous_info( const int &clip){
+    void enable_previous_info( const int &clip=0){
         map<int, Entity> tmp_map;
         for(auto &e:my_monsters)
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
