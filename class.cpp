@@ -83,18 +83,18 @@ class Hero : public Entity
 
 Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor)
 {
-    if(Player::my_Base - (*this) < 5500)
-    {
-        nearBase_ = 1;
-    }
-    else if(Player::enemy_Base - (*this) < 5500)
-    {
-        nearBase_ = 2;
-    }
-    else
-    {
-        nearBase_ = 0;
-    }
+    // if(Player::my_Base - (*this) < 5500)
+    // {
+    //     nearBase_ = 1;
+    // }
+    // else if(Player::enemy_Base - (*this) < 5500)
+    // {
+    //     nearBase_ = 2;
+    // }
+    // else
+    // {
+    //     nearBase_ = 0;
+    // }
 }
 
 class Monsters : public Entity
