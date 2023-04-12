@@ -83,10 +83,10 @@
         * 說明：
             將要求的回合資訊儲存到輸入參數info
             
-			> 輸入參數pre_num可選擇要查看的回合：
+			> 輸入參數pre_num可選擇要查看的回合：  
 					pre_num=0時，可查看當前回合  
 					pre_num=1時，可查看上一回合  
 					...   
 				預設pre_num = 0  
-&emsp;&emsp;&emsp;&emsp;&emsp;  
+&emsp;&emsp;&emsp;&emsp;  
 **pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息**
