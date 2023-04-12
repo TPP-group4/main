@@ -25,18 +25,32 @@
 	* vx, vy：下一步的向量
 	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
 	* threatFor
+
 	> Monster tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-* Hero：
-	* id：ID
-	* type = 0
-	* x, y：在地圖上的位置
-	* shieldLife：盾牌還剩多久
-	* isControlled：有被控制嗎？
-	* **nearBase**：
-		* 0&rarr;在地圖空白區域
-		* 1&rarr;距離我的基地<5500
-		* 2&rarr;距離對方的基地<5500
+ * Hero :
+  * myHero：
+    * id：ID
+    * type = 1
+    * x, y：在地圖上的位置
+    * shieldLife：盾牌還剩多久
+    * isControlled：有被控制嗎？
+    * **nearBase**：
+      * 0&rarr;在地圖空白區域
+      * 1&rarr;距離我的基地<5500
+      * 2&rarr;距離對方的基地<5500
+  * enemyHero：
+    * id：ID
+    * type = 2
+    * x, y：在地圖上的位置
+    * shieldLife：盾牌還剩多久
+    * isControlled：有被控制嗎？
+    * **nearBase**：
+      * 0&rarr;在地圖空白區域
+      * 1&rarr;距離我的基地<5500
+      * 2&rarr;距離對方的基地<5500
 	> Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+
+		
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
 > * 回傳值：他們之間的距離
@@ -57,6 +71,11 @@
 * Hero：來保存**hero**的資訊
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
+* action 用來記錄行為
+	* option "WAIT" "MOVE" "WIND" "CONTROL"
+	* id
+	* pair <int,int> 座標
+	> 可以將 action 給 cout ,ex : cout << (Action)a;
 * namespace::Player：
 	* 資料內容
 		Entity my_Base;
