@@ -26,7 +26,7 @@ int main()
 
         for(int i = 0; i < entity_count; ++i)
         {
-             int id; // Unique identifier
+            int id; // Unique identifier
             int type; // 0=monster, 1=your hero, 2=opponent hero
             int x; // Position of this entity
             int y;
@@ -41,12 +41,21 @@ int main()
         
             Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
         }
+        int cnt =0;
         for(int i=0 ; i < heroes_per_player ; i++){
-            Monsters m = Player::find_nearest_monster(Player::my_Base,Player::monsters);
-            action a;
-            a.option = "MOVE";
-            a.pos = make_pair(m.get_X(),m.get_Y());
-            cout << a;
+            Player::sort_monsters(Player::monsters,Player::near_mybase);
+            if(Player::monsters.size() > cnt){
+                action a;
+                a.option = "MOVE";
+                a.pos = make_pair(Player::monsters[cnt].get_X(),Player::monsters[cnt].get_Y());
+                cout << a;
+                cnt++;
+            }
+            else{
+                action a;
+                a.option = "WAIT";
+                cout << a;
+            }
         }
         Player::clearVector();
     }

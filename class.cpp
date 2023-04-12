@@ -140,6 +140,11 @@ namespace Player{
     vector<Monsters> monsters;
     int my_health, my_mana;
     int enemy_health, enemy_mana;
+    enum{
+        near_mybase,
+        near_enemybase,
+        less_health,
+    };
 
     void base_init(const int &base_x){
         if(base_x == 0)
@@ -226,17 +231,17 @@ namespace Player{
         return first.get_Health() < second.get_Health();
     }
 
-    void sort_monsters( vector<Monsters> &monsters, const int &opt=0){
+    void sort_monsters( vector<Monsters> &monsters, const int &opt){
         switch(opt)
         {
-            case 0:
-                sort(my_monsters.begin(), my_monsters.end(), compare_dist_mybase);
+            case near_mybase:
+                sort( monsters.begin(), monsters.end(), compare_dist_mybase);
                 break;
-            case 1:
-                sort(my_monsters.begin(), my_monsters.end(), compare_dist_enemybase);
+            case near_enemybase:
+                sort( monsters.begin(), monsters.end(), compare_dist_enemybase);
                 break;
-            case 2:
-                sort(my_monsters.begin(), my_monsters.end(), compare_health);
+            case less_health:
+                sort( monsters.begin(), monsters.end(), compare_health);
                 break;
             default:
                 break;
