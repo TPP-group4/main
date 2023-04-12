@@ -122,10 +122,10 @@ class Monsters : public Entity
 
 class action{
     public:
+        action(){};
         string option = "WAIT";
         int id = -1;
         pair<int, int> pos = make_pair(-1,-1);
-        action();
 };
 
 namespace Player{
@@ -137,6 +137,7 @@ namespace Player{
     vector<Hero> enemy_heros;
     vector<Monsters> enemy_monsters;
     vector<Monsters> neutral_monsters;
+    vector<Monsters> monsters;
     int my_health, my_mana;
     int enemy_health, enemy_mana;
 
@@ -159,7 +160,7 @@ namespace Player{
         {
             // Hero tmp(id, type, x, y, shield_life, is_controlled);
             Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-            Player::my_heros.emplace_back(tmp);
+            my_heros.emplace_back(tmp);
             if(tmp.nearBase(my_Base)){
                 tmp.set_nearBase(1);
             }
@@ -174,12 +175,13 @@ namespace Player{
         {
             // Hero tmp(id, type, x, y, shield_life, is_controlled);
             Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-            Player::enemy_heros.emplace_back(tmp);
+            enemy_heros.emplace_back(tmp);
         }
         else if(type == 0)
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
+            monsters.emplace_back(tmp);
         }
     }
 
@@ -211,6 +213,7 @@ namespace Player{
         enemy_heros.clear();
         enemy_monsters.clear();
         neutral_monsters.clear();
+        monsters.clear();
         return;
     }
     bool compare_dist_mybase(Monsters first, Monsters second){
