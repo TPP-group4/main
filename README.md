@@ -1,38 +1,77 @@
-# group 4
-## 類別庫 文件
-### function:
-* 
-```cpp
-void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
-```  
-    * 說明：
+# 進階程式設計-2023
+我們是第四組
+# [遊戲簡介]( https://www.codingame.com/multiplayer/bot-programming/spring-challenge-2022)
+> 名稱：spider attack
+* 兩個角色
+	* **spider**：通常是漫無目的，若離基地太近則會直衝基地，若碰到基地會使其檢少一條命
+	* **Hero**：雙方都有三隻，到後期會有魔法可以使用
+* 一對一的攻防遊戲
+	* 守護自己的基地不被**spider**攻擊，或是成功讓對方被**spider**攻擊，並嘗試生存比對方久
+	* 你可以控制三隻 **Hero**守護自己的基地或是透過一些戰略讓**spider**攻擊對方的基地
+	* 雙方的基地有三條命
+## 資料設計
+* Monster：
+	* id：ID
+	* type = 0
+	* x, y：在地圖上的位置
+	* shieldLife：盾牌還剩多久
+	* isControlled：有被控制嗎？
+	* health：血量
+	* vx, vy：下一步的向量
+	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
+	* threatFor
+* Hero：
+	* id：ID
+	* type = 0
+	* x, y：在地圖上的位置
+	* shieldLife：盾牌還剩多久
+	* isControlled：有被控制嗎？
+	* **nearBase**：
+		* 0&rarr;在地圖空白區域
+		* 1&rarr;距離我的基地<5500
+		* 2&rarr;距離對方的基地<5500
+> Entity, Hero和Monster之間可以用剪法操作：
+> `monster - my_base `
+> * 回傳值：他們之間的距離
+## class design：類別設計
+
+* Entity：來保存基地的資訊，並提供剪法的操作
+	* get_X()：獲取x
+	* get_Y()：獲取y
+* Monster：來保存**spider**的資訊
+	* get_ID()：獲取其ID
+	* get_health：獲取其血量
+	* get_VX(), get_VY()：獲取其向量
+	* get_NearBase()：獲取其nearBase的數值
+	* get_ThreatFor()：獲取其threatFor的數值
+ 	* get_IsControlled()：有被控制嗎？
+ 	* get_ShieldLife()：盾牌還有多久
+* Hero：來保存**hero**的資訊
+	* get_NearBase()：獲取其nearBase的數值
+	> hero的nearBase與monster的定義不同
+* namespace::Player：
+	* void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
+  > 說明：
         將輸入的Monsters vector做遞增排序。
+        輸入參數opt可選擇排序依據：
+            opt=0時，依照monster跟我方基地距離排序
+            opt=1時，依照monster跟對方基地距離排序
+            opt=2時，依照monster剩餘血量排序
 
-    > 輸入參數opt可選擇排序依據：  
-            opt=0時，依照monster跟我方基地距離排序  
-            opt=1時，依照monster跟對方基地距離排序  
-            opt=2時，依照monster剩餘血量排序  
         預設opt = 0
-
-* 
-```cpp
-void enable_previous_info( const int &clip=0)
-```
-    * 說明：儲存每回合對方英雄與怪物的資訊。  
-    &emsp;&emsp;&ensp;&nbsp;  以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id。
-        
-    > 輸入參數clip可決定儲存回和數：  
-            clip=0時只儲存當前回合資訊  
-            clip=1時將儲存當前回合及上一回合資訊，以此類推。  
-        預設clip = 0
-*
-```cpp
-void get_previous_info( const int &pre_num, map<int, Entity> &info)
-```
-    * 說明：
+	* void get_previous_info( const int &pre_num, map<int, Entity> &info)
+  > 說明：
         將要求的回合資訊儲存到輸入參數info。
-    > 輸入參數pre_num可選擇要查看的回合：
-            pre_num=0時可查看當前回合  
-            pre_num=1時可查看上一回合，以此類推。
-        預設pre_num = 0  
-        **pre_num大於儲存的回和數，將無法查回合資訊看並輸出錯誤訊息。**
+        輸入參數pre_num可選擇要查看的回合，
+        pre_num=0時可查看當前回合，pre_num=1時可查看上一回合，以此類推。
+        若pre_num大於儲存的回和數，將無法查看並輸出錯誤訊息。
+        
+        預設pre_num = 0
+	* void enable_previous_info( const int &clip=0)
+  > 說明：
+        儲存每回合對方英雄與怪物的資訊。
+        以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id。
+        輸入參數clip可決定儲存回和數。
+        clip=0時只儲存當前回合資訊，clip=1時將儲存當前回合及上一回合資訊，以此類推。
+        
+        預設clip = 0
