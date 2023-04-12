@@ -18,10 +18,10 @@ class Entity
         int type_;
         int shield_life_;
         int is_controlled_;
+        Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
     
     public:
         Entity();
-        Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
         Entity(const int &x, const int &y);
         const int& get_X() const { return x_; };
         const int& get_Y() const { return y_; };
@@ -59,7 +59,7 @@ Entity::Entity(const int &x, const int &y)
 }
 
 // for reuse code
-Entity::Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled)
+Entity::Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor)
 {
     id_ = id;
     type_ = type;
@@ -74,7 +74,6 @@ class Hero : public Entity
 {
     public:
         Hero() : Entity() { nearBase_ = -1; };
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
         Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
         const int& get_nearBase() { return nearBase_; };
     private:
@@ -82,23 +81,7 @@ class Hero : public Entity
         int nearBase_;
 };
 
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
-{
-    if(Player::my_Base - (*this) < 5500)
-    {
-        nearBase_ = 1;
-    }
-    else if(Player::enemy_Base - (*this) < 5500)
-    {
-        nearBase_ = 2;
-    }
-    else
-    {
-        nearBase_ = 0;
-    }
-};
-
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled)
+Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor)
 {
     if(Player::my_Base - (*this) < 5500)
     {
@@ -143,7 +126,7 @@ Monsters::Monsters():Entity()
     threatFor_ = -1;
 }
 
-Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled)
+Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor)
 {
     health_ = health;
     vx_ = vx;
