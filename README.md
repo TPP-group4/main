@@ -1,3 +1,7 @@
+
+## Headers
+# group 4
+## 類別庫 文件
 # 進階程式設計-2023
 我們是第四組
 # [遊戲簡介]( https://www.codingame.com/multiplayer/bot-programming/spring-challenge-2022)
@@ -9,6 +13,7 @@
 	* 守護自己的基地不被**spider**攻擊，或是成功讓對方被**spider**攻擊，並嘗試生存比對方久
 	* 你可以控制三隻 **Hero**守護自己的基地或是透過一些戰略讓**spider**攻擊對方的基地
 	* 雙方的基地有三條命
+	
 ## 資料設計
 * Monster：
 	* id：ID
@@ -33,6 +38,7 @@
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
 > * 回傳值：他們之間的距離
+
 ## class design：類別設計
 
 * Entity：來保存基地的資訊，並提供剪法的操作
@@ -50,28 +56,37 @@
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
 * namespace::Player：
-	* void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
-  > 說明：
-        將輸入的Monsters vector做遞增排序。
-        輸入參數opt可選擇排序依據：
-            opt=0時，依照monster跟我方基地距離排序
-            opt=1時，依照monster跟對方基地距離排序
-            opt=2時，依照monster剩餘血量排序
 
-        預設opt = 0
-	* void get_previous_info( const int &pre_num, map<int, Entity> &info)
-  > 說明：
-        將要求的回合資訊儲存到輸入參數info。
-        輸入參數pre_num可選擇要查看的回合，
-        pre_num=0時可查看當前回合，pre_num=1時可查看上一回合，以此類推。
-        若pre_num大於儲存的回和數，將無法查看並輸出錯誤訊息。
+    * void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
+
+        * 說明：
+            將輸入的Monsters vector做遞增排序
+
+        > 輸入參數opt可選擇排序依據：  
+                opt=0時，依照monster跟我方基地距離排序  
+                opt=1時，依照monster跟對方基地距離排序  
+                opt=2時，依照monster剩餘血量排序  
+            預設opt = 0
+
+    * void enable_previous_info( const int &clip=0)
+        * 說明：儲存每回合對方英雄與怪物的資訊  
+    &emsp;&emsp;&ensp;&nbsp;  以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
         
-        預設pre_num = 0
-	* void enable_previous_info( const int &clip=0)
-  > 說明：
-        儲存每回合對方英雄與怪物的資訊。
-        以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id。
-        輸入參數clip可決定儲存回和數。
-        clip=0時只儲存當前回合資訊，clip=1時將儲存當前回合及上一回合資訊，以此類推。
-        
-        預設clip = 0
+        > 輸入參數clip可決定儲存回和數：  
+                clip=0時，只儲存當前回合資訊  
+                clip=1時，將儲存當前回合及上一回合資訊
+                ...  
+            預設clip = 0
+    * void get_previous_info( const int &pre_num, map<int, Entity> &info)
+
+        * 說明：
+            將要求的回合資訊儲存到輸入參數info
+            
+        > 輸入參數pre_num可選擇要查看的回合：
+                pre_num=0時，可查看當前回合  
+                pre_num=1時，可查看上一回合
+                ...
+            預設pre_num = 0  
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+**pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息**
