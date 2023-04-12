@@ -25,9 +25,9 @@
 	* vx, vy：下一步的向量
 	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
 	* threatFor
-* Hero：
+* myHero：
 	* id：ID
-	* type = 0
+	* type = 1
 	* x, y：在地圖上的位置
 	* shieldLife：盾牌還剩多久
 	* isControlled：有被控制嗎？
@@ -35,6 +35,17 @@
 		* 0&rarr;在地圖空白區域
 		* 1&rarr;距離我的基地<5500
 		* 2&rarr;距離對方的基地<5500
+* enemyHero：
+	* id：ID
+	* type = 2
+	* x, y：在地圖上的位置
+	* shieldLife：盾牌還剩多久
+	* isControlled：有被控制嗎？
+	* **nearBase**：
+		* 0&rarr;在地圖空白區域
+		* 1&rarr;距離我的基地<5500
+		* 2&rarr;距離對方的基地<5500
+		
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
 > * 回傳值：他們之間的距離
