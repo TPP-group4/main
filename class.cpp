@@ -239,6 +239,7 @@ namespace Player{
     void get_previous_info( const int &pre_num, map<int, Entity> &info){
         if(pre_num > previous_info.size())
         {
+            cerr <<"pre_num out of list's size"<<endl;
             return;
         }
         else
@@ -247,7 +248,6 @@ namespace Player{
             info = *it;
             return;
         }
-
     }
 
     pair<int, int> find_wind_starting_point(){
