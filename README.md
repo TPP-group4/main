@@ -66,6 +66,11 @@
 * Hero：來保存**hero**的資訊
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
+* action 用來記錄行為
+	* option "WAIT" "MOVE" "WIND" "CONTROL"
+	* id
+	* pair <int,int> 座標
+	> 可以將 action 給 cout ,ex : cout << (Action)a;
 * namespace::Player：
 	* void base_init( const int base_x)
 
