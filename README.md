@@ -25,6 +25,7 @@
 	* vx, vy：下一步的向量
 	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
 	* threatFor
+	> Monster tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
 * Hero：
 	* id：ID
 	* type = 0
@@ -35,6 +36,7 @@
 		* 0&rarr;在地圖空白區域
 		* 1&rarr;距離我的基地<5500
 		* 2&rarr;距離對方的基地<5500
+	> Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
 > * 回傳值：他們之間的距離
@@ -56,6 +58,24 @@
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
 * namespace::Player：
+	* 資料內容
+		Entity my_Base;
+		Entity enemy_Base;
+		list<map<int, Entity>> previous_info;
+		vector<Monsters> my_monsters;
+		vector<Hero> my_heros;
+		vector<Hero> enemy_heros;
+		vector<Monsters> enemy_monsters;
+		vector<Monsters> neutral_monsters;
+		vector<Monsters> monsters;
+		> 每回合結束需呼叫 clearVector() 
+	* void input(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &near_base, const int &threat_for)；
+		* 將整筆資料讀入根據 type 加入到 
+			> vector<Hero> my_heros;
+			vector<Hero> enemy_heros;
+			vector<Monsters> monsters;
+
+
 	* void base_init( const int base_x)
 
         * 說明：
