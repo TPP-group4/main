@@ -191,11 +191,32 @@ namespace Player{
         return;
     }
 
-    void sort_monsters(){
-        sort(my_monsters.begin(), my_monsters.end(), compare);
+    void sort_monsters( vector<Monsters> &monsters, const int &opt){
+        switch(opt)
+        {
+            case 0:
+                sort(my_monsters.begin(), my_monsters.end(), compare_dist_mybase);
+                break;
+            case 1:
+                sort(my_monsters.begin(), my_monsters.end(), compare_dist_enemybase);
+                break;
+            case 2:
+                sort(my_monsters.begin(), my_monsters.end(), compare_health);
+                break;
+            default:
+                break;
+        }
+
+        return;
     }
-    bool compare(Entity first, Entity second){
+    bool compare_dist_mybase(Monsters first, Monsters second){
         return first-Player::my_Base < second-Player::my_Base;
+    }
+    bool compare_dist_enemybase(Monsters first, Monsters second){
+        return first-Player::enemy_Base < second-Player::enemy_Base;
+    }
+    bool compare_health(Monsters first, Monsters second){
+        return first.get_Health() < second.get_Health();
     }
 
     void enable_previous_info( const int &clip){
