@@ -225,7 +225,6 @@ namespace Player{
 
         return;
     }
-   
     void enable_previous_info( const int &clip=0){
         map<int, Entity> tmp_map;
         for(auto &e:my_monsters)
