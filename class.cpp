@@ -18,14 +18,15 @@ class Entity
         int type_;
         int shield_life_;
         int is_controlled_;
+        Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
     
     public:
         Entity();
-        Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
         Entity(const int &x, const int &y);
-        const int get_X() const { return x_; };
-        const int get_Y() const { return y_; };
-        const int get_ShieldLife() const { return shield_life_; };
+        const int& get_X() const { return x_; };
+        const int& get_Y() const { return y_; };
+        const int& get_ShieldLife() const { return shield_life_; };
+        const int& get_ID() const { return id_; };
 
         // operator overloading for computing distance between two entities
         double operator-(const Entity &other)const{
@@ -58,7 +59,7 @@ Entity::Entity(const int &x, const int &y)
 }
 
 // for reuse code
-Entity::Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled)
+Entity::Entity(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor)
 {
     id_ = id;
     type_ = type;
@@ -73,31 +74,40 @@ class Hero : public Entity
 {
     public:
         Hero() : Entity() { nearBase_ = -1; };
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled) {};
-        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled);
-        void set_nearBase(const int& a) { nearBase_ = a; };
+        Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
         const int& get_nearBase() { return nearBase_; };
     private:
         // 用於判斷對方 hero 是否在我方的base裡面
         int nearBase_;
 };
 
-Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled) : Entity(id, type, x, y, shield_life, is_controlled)
+Hero::Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor)
 {
-    nearBase_ = -1;
-};
+    // if(Player::my_Base - (*this) < 5500)
+    // {
+    //     nearBase_ = 1;
+    // }
+    // else if(Player::enemy_Base - (*this) < 5500)
+    // {
+    //     nearBase_ = 2;
+    // }
+    // else
+    // {
+    //     nearBase_ = 0;
+    // }
+}
 
 class Monsters : public Entity
 {
 public:
     Monsters();
     Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor);
-    const int get_Health() const { return health_; };
-    const int get_VX() const { return vx_; };
-    const int get_VY() const { return vy_; };
-    const int get_NearBase() const { return nearBase_; };
-    const int get_ThreatFor() const { return threatFor_; };
-    const int get_IsControlled() const { return is_controlled_; };
+    const int& get_Health() const { return health_; };
+    const int& get_VX() const { return vx_; };
+    const int& get_VY() const { return vy_; };
+    const int& get_NearBase() const { return nearBase_; };
+    const int& get_ThreatFor() const { return threatFor_; };
+    const int& get_IsControlled() const { return is_controlled_; };
 private:
     int health_;
     int vx_;
@@ -116,7 +126,7 @@ Monsters::Monsters():Entity()
     threatFor_ = -1;
 }
 
-Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled)
+Monsters::Monsters(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor)
 {
     health_ = health;
     vx_ = vx;
@@ -257,25 +267,15 @@ int main()
 
             if(type == 1)
             {
-                Hero tmp(id, type, x, y, shield_life, is_controlled);
+                // Hero tmp(id, type, x, y, shield_life, is_controlled);
+                Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
                 Player::my_heros.emplace_back(tmp);
                 // 要解構嗎不曉得?
             }
             else if(type == 2)
             {
-                Hero tmp(id, type, x, y, shield_life, is_controlled);
-                if(hypot(Player::my_Base.get_X() - x, Player::my_Base.get_Y() - y) < 5500)
-                {
-                    tmp.set_nearBase(1);
-                }
-                else if(hypot(Player::enemy_Base.get_X() - x, Player::enemy_Base.get_Y() - y) < 5500)
-                {
-                    tmp.set_nearBase(2);
-                }
-                else
-                {
-                    tmp.set_nearBase(0);
-                }
+                // Hero tmp(id, type, x, y, shield_life, is_controlled);
+                Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
                 Player::enemy_heros.emplace_back(tmp);
             }
             else if(type == 0)
