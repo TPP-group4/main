@@ -12,10 +12,10 @@ using namespace std;
 class Entity
 {
     private:
-        int x_;
-        int y_;
 
     protected:
+        int x_;
+        int y_;
         int id_;
         int type_;
         int shield_life_;
@@ -100,6 +100,7 @@ class Hero : public Entity
         void set_nearBase(int nearBase){
             nearBase_ = nearBase;
         }
+       
     private:
         // 用於判斷對方 hero 是否在我方的base裡面
 };
@@ -124,6 +125,7 @@ class action{
         string option = "WAIT";
         int id = -1;
         pair<int, int> pos = make_pair(-1,-1);
+        action();
 };
 
 namespace Player{
