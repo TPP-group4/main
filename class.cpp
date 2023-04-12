@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <map>
+#include <list>
 
 using namespace std;
 
@@ -145,7 +147,7 @@ class action{
 namespace Player{
     Entity my_Base;
     Entity enemy_Base;
-
+    list<map<int, Entity>> previous_info;
     vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
@@ -185,8 +187,67 @@ namespace Player{
         return;
     }
 
-    void sort(){
+    void sort_monsters( vector<Monsters> &monsters, const int &opt=0){
+        switch(opt)
+        {
+            case 0:
+                sort(my_monsters.begin(), my_monsters.end(), compare_dist_mybase);
+                break;
+            case 1:
+                sort(my_monsters.begin(), my_monsters.end(), compare_dist_enemybase);
+                break;
+            case 2:
+                sort(my_monsters.begin(), my_monsters.end(), compare_health);
+                break;
+            default:
+                break;
+        }
 
+        return;
+    }
+    bool compare_dist_mybase(Monsters first, Monsters second){
+        return first-Player::my_Base < second-Player::my_Base;
+    }
+    bool compare_dist_enemybase(Monsters first, Monsters second){
+        return first-Player::enemy_Base < second-Player::enemy_Base;
+    }
+    bool compare_health(Monsters first, Monsters second){
+        return first.get_Health() < second.get_Health();
+    }
+
+    void enable_previous_info( const int &clip=0){
+        map<int, Entity> tmp_map;
+        for(auto &e:my_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+        for(auto &e:enemy_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+        for(auto &e:neutral_monsters)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+
+        previous_info.push_front(tmp_map);
+        if(previous_info.size() > clip+1)
+        {
+            previous_info.pop_back();
+        }
+
+    }
+
+    void get_previous_info( const int &pre_num, map<int, Entity> &info){
+        if(pre_num > previous_info.size())
+        {
+            cerr <<"pre_num out of list's size"<<endl;
+            return;
+        }
+        else
+        {
+            auto it = next(previous_info.begin(), pre_num);
+            info = *it;
+            return;
+        }
+    }
+
+    pair<int, int> find_wind_starting_point(){
+        
     }
 
     pair<int ,int > &windPos(){
