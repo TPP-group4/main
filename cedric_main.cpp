@@ -42,8 +42,8 @@ int main()
             Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
         }
         int cnt =0;
+        Player::sort_monsters(Player::monsters,Player::near_mybase);
         for(int i=0 ; i < heroes_per_player ; i++){
-            Player::sort_monsters(Player::monsters,Player::near_mybase);
             if(Player::monsters.size() > cnt){
                 action a;
                 a.option = "MOVE";
