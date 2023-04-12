@@ -149,14 +149,16 @@ namespace Player{
     void base_init(const int &base_x){
         if(base_x == 0)
         {
-            Player::enemy_Base = Entity(176300, 9000);
-            Player::my_Base = Entity(0, 0);
+            enemy_Base = Entity(17630, 9000);
+            my_Base = Entity(0, 0);
         }
         else
         {
-            Player::my_Base = Entity(176300, 9000);
-            Player::enemy_Base = Entity(0, 0);
+            my_Base = Entity(17630, 9000);
+            enemy_Base = Entity(0, 0);
         }
+        cerr << my_Base.get_X() << my_Base.get_Y() << endl;
+        cerr << enemy_Base.get_X() << enemy_Base.get_Y() << endl;
         return;
     }
 
@@ -222,26 +224,29 @@ namespace Player{
         return;
     }
     bool compare_dist_mybase(Monsters first, Monsters second){
-        return first-Player::my_Base < second-Player::my_Base;
+        cerr << first-my_Base << second-my_Base << endl;
+        cerr << (first-my_Base < second-my_Base) << endl;
+        return first-my_Base < second-my_Base;
     }
     bool compare_dist_enemybase(Monsters first, Monsters second){
-        return first-Player::enemy_Base < second-Player::enemy_Base;
+        return first-enemy_Base < second-enemy_Base;
     }
     bool compare_health(Monsters first, Monsters second){
         return first.get_Health() < second.get_Health();
     }
 
-    void sort_monsters( vector<Monsters> &monsters, const int &opt){
+    void sort_monsters( vector<Monsters> &m, const int &opt){
+        cerr << opt << endl;
         switch(opt)
         {
             case near_mybase:
-                sort( monsters.begin(), monsters.end(), compare_dist_mybase);
+                sort( m.begin(), m.end(), compare_dist_mybase);
                 break;
             case near_enemybase:
-                sort( monsters.begin(), monsters.end(), compare_dist_enemybase);
+                sort( m.begin(), m.end(), compare_dist_enemybase);
                 break;
             case less_health:
-                sort( monsters.begin(), monsters.end(), compare_health);
+                sort( m.begin(), m.end(), compare_health);
                 break;
             default:
                 break;
