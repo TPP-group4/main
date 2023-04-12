@@ -50,6 +50,7 @@ int main()
 
             Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
         }
+        Player::enable_previous_info(1);
         action a;
         a.option = "MOVE";
         a.pos = make_pair(17630,9000);
