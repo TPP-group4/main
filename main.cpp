@@ -7,7 +7,7 @@ int main()
 
     //cin >> base_x >> base_y; cin.ignore();
 
-    // 判斷base在哪
+    // 判斷base在哪 //要不要包成Player::base_init
     if(base_x == 0)
     {
         Player::enemy_Base = Entity(176300, 9000);
