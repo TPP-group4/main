@@ -140,6 +140,20 @@ namespace Player{
     int my_health, my_mana;
     int enemy_health, enemy_mana;
 
+    void base_init(const int &base_x){
+        if(base_x == 0)
+        {
+            Player::enemy_Base = Entity(176300, 9000);
+            Player::my_Base = Entity(0, 0);
+        }
+        else
+        {
+            Player::my_Base = Entity(176300, 9000);
+            Player::enemy_Base = Entity(0, 0);
+        }
+        return;
+    }
+
     void input(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &near_base, const int &threat_for){
         if(type == 1)
         {

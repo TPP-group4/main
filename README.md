@@ -56,7 +56,11 @@
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
 * namespace::Player：
+	* void base_init( const int base_x)
 
+        * 說明：
+            辨識基地座標位置
+  
     * void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
 
         * 說明：
