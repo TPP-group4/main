@@ -339,46 +339,6 @@ namespace Player{
         return;
     }
 
-<<<<<<< HEAD
-    // 輸入r
-    // 隨機回傳在1/4圓中的任意位置
-    // 圓心：mybase
-    pair<int, int> random_pos_circle(int range)
-    {
-        int base_top_left = my_Base.get_X() == 0 ? 1 : 0; 
-        int theta;
-        if(base_top_left)
-        {
-            int minValue = 0;
-            int maxValue = 90;
-            theta = rand() % (maxValue - minValue + 1) + minValue;
-        }
-        else
-        {
-            int minValue = 180;
-            int maxValue = 270;
-            theta = rand() % (maxValue - minValue + 1) + minValue;
-        }
-        auto pi = acos(-1.0);
-        // 將角度轉為弧度
-        double radian = theta * pi / 180.0;
-        // generate number between 1 and range
-        int r = rand() % range + 1;
-        int x = r * cos(radian);
-        int y = r * sin(radian);
-        pair<int, int> tmp;
-        if(base_top_left)
-        {
-            tmp = make_pair(x, y);
-        }
-        else
-        {
-            tmp = make_pair(17639 + x, 9000+ y);
-        }
-        return tmp;
-    }
-};
-=======
     // 輸入r 
     // 隨機回傳在1/4圓中的任意位置 
     // 圓心：mybase 
@@ -417,7 +377,6 @@ namespace Player{
         return tmp; 
     } 
 }; 
->>>>>>> main
 
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
