@@ -285,9 +285,32 @@ namespace Player{
         }
     }
 
-    pair<int, int> find_wind_starting_point(){
-        
+
+
+    void find_wind_starting_point(vector<pair<int,int> > &wind_points){
+        if(previous_info.size()<1)
+        {
+            cerr <<"Don't have enough previous info"<<endl;
+            return;
+        }
+        else
+        {
+            auto it_0 = next(previous_info.begin(), 0);
+            auto it_1 = next(previous_info.begin(), 1);
+            map<int, Entity> info_0 = *it_0;
+            map<int, Entity> info_1 = *it_1;
+
+            for(auto m: info_0)
+            {
+                if(info_1.find(m.first) != info_0.end() && m.second-info_1[m.first] >= 2200)
+                {
+                    wind_points.push_back(make_pair(info_1[m.first].get_X(), info_1[m.first].get_Y()) );
+                }
+            }
+        }
+        return;
     }
+
 
     pair<int ,int > &windPos(){
 
