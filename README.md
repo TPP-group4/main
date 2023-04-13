@@ -141,4 +141,9 @@
 			> 以輸入參數wind_points儲存被風吹過的怪獸其原始位置：  
 				1. 缺少上一回合資料時，將不返還任何資料並輸出錯誤訊息  
 				2. 沒有偵測到被風吹過的怪獸時，將不儲存任何資料  
-				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置  
+				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置
+	* `pair<int, int> random_pos_circle(int range) `
+		* 返回隨機的位置距離自己的基地`range`=>在固定範圍內活動
+	> 使用方法：
+	> 1. `pair<int, int> tmp = Player::random_pos_circle(10500);`
+    > 2. `cout << "MOVE " << tmp.first << " " << tmp.second << endl;`
