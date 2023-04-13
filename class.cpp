@@ -90,7 +90,7 @@ class Hero : public Entity
         Hero() : Entity() { nearBase_ = -1; };
         Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor){};
         bool nearBase(Entity base) {
-            if(*this - base < 3000){
+            if(*this - base < 5500){
                 return true;
             }
             else{
