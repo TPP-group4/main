@@ -285,7 +285,7 @@ namespace Player{
         info.clear();
         if(pre_num >= previous_info.size())
         {
-            cerr<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
+            cerr<<"Info size error! "<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
             cerr <<" => pre_num out of list's size !!!"<<endl;
             return;
         }
@@ -311,18 +311,18 @@ namespace Player{
             auto it_1 = next(previous_info.begin(), 1);
             map<int, Entity> info_0 = *it_0;
             map<int, Entity> info_1 = *it_1;
-            /*
-            cerr << "winded id: ";
+            
+            //cerr << "winded id: ";
             for(auto m: info_0)
             {
                 if(info_1.find(m.first) != info_1.end() && m.second-info_1[m.first] >= 2000)
                 {
                     wind_points.push_back(make_pair(info_1[m.first].get_X(), info_1[m.first].get_Y()) );
-                    cerr << m.first << " ";
+                    //cerr << m.first << " ";
                 }
             }
-            cerr<<endl;
-            */
+            //cerr<<endl;
+            
         }
         return;
     }
