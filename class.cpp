@@ -12,10 +12,10 @@ using namespace std;
 class Entity
 {
     private:
-        int x_;
-        int y_;
 
     protected:
+        int x_;
+        int y_;
         int id_;
         int type_;
         int shield_life_;
@@ -100,6 +100,7 @@ class Hero : public Entity
         void set_nearBase(int nearBase){
             nearBase_ = nearBase;
         }
+       
     private:
         // 用於判斷對方 hero 是否在我方的base裡面
 };
@@ -121,6 +122,7 @@ class Monsters : public Entity
 
 class action{
     public:
+        action(){};
         string option = "WAIT";
         int id = -1;
         pair<int, int> pos = make_pair(-1,-1);
@@ -135,20 +137,28 @@ namespace Player{
     vector<Hero> enemy_heros;
     vector<Monsters> enemy_monsters;
     vector<Monsters> neutral_monsters;
+    vector<Monsters> monsters;
     int my_health, my_mana;
     int enemy_health, enemy_mana;
+    enum{
+        near_mybase,
+        near_enemybase,
+        less_health,
+    };
 
     void base_init(const int &base_x){
         if(base_x == 0)
         {
-            Player::enemy_Base = Entity(176300, 9000);
-            Player::my_Base = Entity(0, 0);
+            enemy_Base = Entity(17630, 9000);
+            my_Base = Entity(0, 0);
         }
         else
         {
-            Player::my_Base = Entity(176300, 9000);
-            Player::enemy_Base = Entity(0, 0);
+            my_Base = Entity(17630, 9000);
+            enemy_Base = Entity(0, 0);
         }
+        cerr << my_Base.get_X() << my_Base.get_Y() << endl;
+        cerr << enemy_Base.get_X() << enemy_Base.get_Y() << endl;
         return;
     }
 
@@ -157,7 +167,7 @@ namespace Player{
         {
             // Hero tmp(id, type, x, y, shield_life, is_controlled);
             Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-            Player::my_heros.emplace_back(tmp);
+            my_heros.emplace_back(tmp);
             if(tmp.nearBase(my_Base)){
                 tmp.set_nearBase(1);
             }
@@ -172,12 +182,13 @@ namespace Player{
         {
             // Hero tmp(id, type, x, y, shield_life, is_controlled);
             Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
-            Player::enemy_heros.emplace_back(tmp);
+            enemy_heros.emplace_back(tmp);
         }
         else if(type == 0)
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
+            monsters.emplace_back(tmp);
         }
     }
 
@@ -209,29 +220,33 @@ namespace Player{
         enemy_heros.clear();
         enemy_monsters.clear();
         neutral_monsters.clear();
+        monsters.clear();
         return;
     }
     bool compare_dist_mybase(Monsters first, Monsters second){
-        return first-Player::my_Base < second-Player::my_Base;
+        cerr << first-my_Base << second-my_Base << endl;
+        cerr << (first-my_Base < second-my_Base) << endl;
+        return first-my_Base < second-my_Base;
     }
     bool compare_dist_enemybase(Monsters first, Monsters second){
-        return first-Player::enemy_Base < second-Player::enemy_Base;
+        return first-enemy_Base < second-enemy_Base;
     }
     bool compare_health(Monsters first, Monsters second){
         return first.get_Health() < second.get_Health();
     }
 
-    void sort_monsters( vector<Monsters> &monsters, const int &opt=0){
+    void sort_monsters( vector<Monsters> &m, const int &opt){
+        cerr << opt << endl;
         switch(opt)
         {
-            case 0:
-                sort(my_monsters.begin(), my_monsters.end(), compare_dist_mybase);
+            case near_mybase:
+                sort( m.begin(), m.end(), compare_dist_mybase);
                 break;
-            case 1:
-                sort(my_monsters.begin(), my_monsters.end(), compare_dist_enemybase);
+            case near_enemybase:
+                sort( m.begin(), m.end(), compare_dist_enemybase);
                 break;
-            case 2:
-                sort(my_monsters.begin(), my_monsters.end(), compare_health);
+            case less_health:
+                sort( m.begin(), m.end(), compare_health);
                 break;
             default:
                 break;
