@@ -146,4 +146,4 @@
 		* 返回隨機的位置距離自己的基地`range`=>在固定範圍內活動
 	> 使用方法：
 	> 1. `pair<int, int> tmp = Player::random_pos_circle(10500);`
-    > 2. `cout << "MOVE " << tmp.first << " " << tmp.second << endl;`
+    	> 2. `cout << "MOVE " << tmp.first << " " << tmp.second << endl;`
