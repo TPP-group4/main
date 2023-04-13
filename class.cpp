@@ -285,8 +285,6 @@ namespace Player{
         }
     }
 
-
-
     void find_wind_starting_point(vector<pair<int,int> > &wind_points){
         wind_points.clear();
         
