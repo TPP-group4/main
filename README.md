@@ -1,6 +1,3 @@
-
-## Headers
-# group 4
 ## 類別庫 文件
 # 進階程式設計-2023
 我們是第四組
@@ -69,15 +66,15 @@
 * action 用來記錄行為
 	* option "WAIT" "MOVE" "WIND" "CONTROL"
 	* id
-	* pair <int,int> 座標
-	> 可以將 action 給 cout ,ex : cout << (Action)a;
+	* `pair <int,int>` 座標
+	> 可以將 action 給 cout ,ex : `cout << (Action)a`;
 * namespace::Player：
-	* void base_init( const int base_x)
+	* `void base_init( const int base_x)`
 
         * 說明：
             辨識基地座標位置
   
-    * void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
+    * `void sort_monsters( vector<Monsters> &monsters, const int &opt=0)`
 
         * 說明：
             將輸入的Monsters vector做遞增排序
@@ -91,8 +88,7 @@
 				預設opt = 0
 
     * void enable_previous_info( const int &clip=0)
-        * 說明：儲存每回合對方英雄與怪物的資訊  
-    &emsp;&emsp;&ensp;&nbsp;  以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
+        * 說明：儲存每回合對方英雄與怪物的資訊，以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
         
 			> 輸入參數clip可決定儲存回和數：  
 			  
