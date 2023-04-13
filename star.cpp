@@ -186,18 +186,6 @@ namespace Player{
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
-            if(near_base == 1)
-            {
-                my_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 0)
-            {
-                enemy_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 2)
-            {
-                neutral_monsters.emplace_back(tmp);
-            }
             monsters.emplace_back(tmp);
             if(near_base == 1)
             {
@@ -275,10 +263,6 @@ namespace Player{
     }
     void enable_previous_info( const int &clip=0){
         map<int, Entity> tmp_map;
-         for(auto &e:my_heros)
-        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
-         for(auto &e:enemy_heros)
-        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
         for(auto &e:my_monsters)
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
         for(auto &e:enemy_monsters)
@@ -291,14 +275,13 @@ namespace Player{
         {
             previous_info.pop_back();
         }
+
     }
 
     void get_previous_info( const int &pre_num, map<int, Entity> &info){
-        info.clear();
-        if(pre_num >= previous_info.size())
+        if(pre_num > previous_info.size())
         {
-            cerr<<"Info size error! "<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
-            cerr <<" => pre_num out of list's size !!!"<<endl;
+            cerr <<"pre_num out of list's size"<<endl;
             return;
         }
         else
@@ -323,23 +306,18 @@ namespace Player{
             auto it_1 = next(previous_info.begin(), 1);
             map<int, Entity> info_0 = *it_0;
             map<int, Entity> info_1 = *it_1;
-            
-            //cerr << "winded id: ";
+
             for(auto m: info_0)
             {
-                if(info_1.find(m.first) != info_1.end() && m.second-info_1[m.first] >= 2000)
+                if(info_1.find(m.first) != info_0.end() && m.second-info_1[m.first] >= 2200)
                 {
                     wind_points.push_back(make_pair(info_1[m.first].get_X(), info_1[m.first].get_Y()) );
-                    //cerr << m.first << " ";
                 }
             }
-            //cerr<<endl;
-            
         }
         return;
     }
 
-<<<<<<< HEAD
     // 輸入r
     // 隨機回傳在1/4圓中的任意位置
     // 圓心：mybase
@@ -373,51 +351,12 @@ namespace Player{
         }
         else
         {
+            cerr << x << " " << y << endl;
             tmp = make_pair(17639 + x, 9000+ y);
         }
         return tmp;
     }
 };
-=======
-    // 輸入r 
-    // 隨機回傳在1/4圓中的任意位置 
-    // 圓心：mybase 
-    pair<int, int> random_pos_circle(int range) 
-    { 
-        int base_top_left = my_Base.get_X() == 0 ? 1 : 0;  
-        int theta; 
-        if(base_top_left) 
-        { 
-            int minValue = 0; 
-            int maxValue = 90; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        }  
-        else 
-        { 
-            int minValue = 180; 
-            int maxValue = 270; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        } 
-        auto pi = acos(-1.0); 
-        // 將角度轉為弧度 
-        double radian = theta * pi / 180.0;  
-        // generate number between 1 and range 
-        int r = rand() % range + 1; 
-        int x = r * cos(radian); 
-        int y = r * sin(radian);  
-        pair<int, int> tmp; 
-        if(base_top_left) 
-        { 
-            tmp = make_pair(x, y); 
-        } 
-        else 
-        { 
-            tmp = make_pair(17639 + x, 9000+ y); 
-        } 
-        return tmp; 
-    } 
-}; 
->>>>>>> main
 
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
@@ -439,4 +378,71 @@ ostream & operator <<(ostream &os, const action &a){
         os << "WAIT" << endl;
     }
     return os;
+}
+
+int main()
+{
+    // The corner of the map representing your base
+    int base_x; 
+    int base_y;
+
+    cin >> base_x >> base_y; cin.ignore();
+
+    // 判斷base在哪 //要不要包成Player::base_init
+    Player::base_init(base_x);
+    // Always 3
+    int heroes_per_player;                      
+    cin >> heroes_per_player; cin.ignore();
+
+    // game loop
+    while(1)
+    {
+        cin >> Player::my_health >> Player::my_mana; cin.ignore();
+        cin >> Player::enemy_health >> Player::enemy_mana; cin.ignore();
+
+        // Amount of heros and monsters you can see
+        int entity_count;
+        cin >> entity_count; cin.ignore();
+
+        for(int i = 0; i < entity_count; ++i)
+        {
+            int id; // Unique identifier
+            int type; // 0=monster, 1=your hero, 2=opponent hero
+            int x; // Position of this entity
+            int y;
+            int shield_life; // Ignore for this league; Count down until shield spell fades
+            int is_controlled; // Ignore for this league; Equals 1 when this entity is under a control spell
+            int health; // Remaining health of this monster
+            int vx; // Trajectory of this monster
+            int vy;
+            int near_base; // 0=monster with no target yet, 1=monster targeting a base
+            int threat_for; // Given this monster's trajectory, is it a threat to 1=your base, 2=your opponent's base, 0=neither
+            cin >> id >> type >> x >> y >> shield_life >> is_controlled >> health >> vx >> vy >> near_base >> threat_for; cin.ignore();
+        
+            Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+        }
+        int my_clip = 2;
+        Player::enable_previous_info( my_clip );
+
+        Player::sort_monsters(Player::monsters, 0);
+        
+
+        for(int i = 0; i < 3; ++i)
+        {
+            Monsters tmp = Player::find_nearest_monster(Player::my_Base ,Player::monsters);
+            cerr << tmp.get_ID() << endl;
+            if(Player::my_monsters.size() > i)
+            {
+                cerr << Player::my_monsters.size() << endl;
+                cout << "MOVE " << Player::my_monsters[i].get_X() << " " << Player::my_monsters[i].get_Y() << endl;
+            }
+            else
+            {
+                //pair<int, int> tmp = Player::random_pos_circle(7500);
+                //cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+                cout << "WAIT" << endl;
+            }
+        }
+        Player::clearVector();
+    }
 }

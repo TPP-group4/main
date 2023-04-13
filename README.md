@@ -1,6 +1,3 @@
-
-## Headers
-# group 4
 ## 類別庫 文件
 # 進階程式設計-2023
 我們是第四組
@@ -25,26 +22,31 @@
 	* vx, vy：下一步的向量
 	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
 	* threatFor
-* myHero：
-	* id：ID
-	* type = 1
-	* x, y：在地圖上的位置
-	* shieldLife：盾牌還剩多久
-	* isControlled：有被控制嗎？
-	* **nearBase**：
-		* 0&rarr;在地圖空白區域
-		* 1&rarr;距離我的基地<5500
-		* 2&rarr;距離對方的基地<5500
-* enemyHero：
-	* id：ID
-	* type = 2
-	* x, y：在地圖上的位置
-	* shieldLife：盾牌還剩多久
-	* isControlled：有被控制嗎？
-	* **nearBase**：
-		* 0&rarr;在地圖空白區域
-		* 1&rarr;距離我的基地<5500
-		* 2&rarr;距離對方的基地<5500
+
+	> Monster tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+ * Hero :
+  * myHero：
+    * id：ID
+    * type = 1
+    * x, y：在地圖上的位置
+    * shieldLife：盾牌還剩多久
+    * isControlled：有被控制嗎？
+    * **nearBase**：
+      * 0&rarr;在地圖空白區域
+      * 1&rarr;距離我的基地<5500
+      * 2&rarr;距離對方的基地<5500
+  * enemyHero：
+    * id：ID
+    * type = 2
+    * x, y：在地圖上的位置
+    * shieldLife：盾牌還剩多久
+    * isControlled：有被控制嗎？
+    * **nearBase**：
+      * 0&rarr;在地圖空白區域
+      * 1&rarr;距離我的基地<5500
+      * 2&rarr;距離對方的基地<5500
+	> Hero tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+
 		
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
@@ -69,15 +71,34 @@
 * action 用來記錄行為
 	* option "WAIT" "MOVE" "WIND" "CONTROL"
 	* id
-	* pair <int,int> 座標
-	> 可以將 action 給 cout ,ex : cout << (Action)a;
+	* `pair <int,int>` 座標
+	> 可以將 action 給 cout ,ex : `cout << (Action)a`;
 * namespace::Player：
-	* void base_init( const int base_x)
+
+	* 資料內容
+		Entity my_Base;
+		Entity enemy_Base;
+		list<map<int, Entity>> previous_info;
+		vector<Monsters> my_monsters;
+		vector<Hero> my_heros;
+		vector<Hero> enemy_heros;
+		vector<Monsters> enemy_monsters;
+		vector<Monsters> neutral_monsters;
+		vector<Monsters> monsters;
+		> 每回合結束需呼叫 clearVector() 
+	* `void input(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &near_base, const int &threat_for)；`
+		* 將整筆資料讀入根據 type 加入到 
+			> vector<Hero> my_heros;
+			vector<Hero> enemy_heros;
+			vector<Monsters> monsters;
+
+
+	* `void base_init( const int base_x)`
 
         * 說明：
             辨識基地座標位置
   
-    * void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
+    * `void sort_monsters( vector<Monsters> &monsters, const int &opt=0)`
 
         * 說明：
             將輸入的Monsters vector做遞增排序
@@ -91,8 +112,7 @@
 				預設opt = 0
 
     * void enable_previous_info( const int &clip=0)
-        * 說明：儲存每回合對方英雄與怪物的資訊  
-    &emsp;&emsp;&ensp;&nbsp;  以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
+        * 說明：儲存每回合對方英雄與怪物的資訊，以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
         
 			> 輸入參數clip可決定儲存回和數：  
 			  
@@ -121,4 +141,9 @@
 			> 以輸入參數wind_points儲存被風吹過的怪獸其原始位置：  
 				1. 缺少上一回合資料時，將不返還任何資料並輸出錯誤訊息  
 				2. 沒有偵測到被風吹過的怪獸時，將不儲存任何資料  
-				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置  
+				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置
+	* `pair<int, int> random_pos_circle(int range) `
+		* 返回隨機的位置距離自己的基地`range`=>在固定範圍內活動
+	> 使用方法：
+			`pair<int, int> tmp = Player::random_pos_circle(10500);`
+	 		`cout << "MOVE " << tmp.first << " " << tmp.second << endl;`
