@@ -1,6 +1,3 @@
-
-## Headers
-# group 4
 ## 類別庫 文件
 # 進階程式設計-2023
 我們是第四組
@@ -74,9 +71,10 @@
 * action 用來記錄行為
 	* option "WAIT" "MOVE" "WIND" "CONTROL"
 	* id
-	* pair <int,int> 座標
-	> 可以將 action 給 cout ,ex : cout << (Action)a;
+	* `pair <int,int>` 座標
+	> 可以將 action 給 cout ,ex : `cout << (Action)a`;
 * namespace::Player：
+
 	* 資料內容
 		Entity my_Base;
 		Entity enemy_Base;
@@ -88,24 +86,25 @@
 		vector<Monsters> neutral_monsters;
 		vector<Monsters> monsters;
 		> 每回合結束需呼叫 clearVector() 
-	* void input(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &near_base, const int &threat_for)；
+	* `void input(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &near_base, const int &threat_for)；`
 		* 將整筆資料讀入根據 type 加入到 
 			> vector<Hero> my_heros;
 			vector<Hero> enemy_heros;
 			vector<Monsters> monsters;
 
 
-	* void base_init( const int base_x)
+	* `void base_init( const int base_x)`
 
         * 說明：
             辨識基地座標位置
   
-    * void sort_monsters( vector<Monsters> &monsters, const int &opt=0)
+    * `void sort_monsters( vector<Monsters> &monsters, const int &opt=0)`
 
         * 說明：
             將輸入的Monsters vector做遞增排序
 
 			> 輸入參數opt可選擇排序依據：  
+			  
 					opt=0時，依照monster跟我方基地距離排序  
 					opt=1時，依照monster跟對方基地距離排序  
 					opt=2時，依照monster剩餘血量排序  
@@ -113,10 +112,10 @@
 				預設opt = 0
 
     * void enable_previous_info( const int &clip=0)
-        * 說明：儲存每回合對方英雄與怪物的資訊  
-    &emsp;&emsp;&ensp;&nbsp;  以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
+        * 說明：儲存每回合對方英雄與怪物的資訊，以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
         
 			> 輸入參數clip可決定儲存回和數：  
+			  
 					clip=0時，只儲存當前回合資訊  
 					clip=1時，將儲存當前回合及上一回合資訊  
 					...  
@@ -126,10 +125,20 @@
         * 說明：
             將要求的回合資訊儲存到輸入參數info
             
-			> 輸入參數pre_num可選擇要查看的回合：  
+			> 輸入參數pre_num可選擇要查看的回合： 
+			   
 					pre_num=0時，可查看當前回合  
 					pre_num=1時，可查看上一回合  
 					...   
 				預設pre_num = 0  
-&emsp;&emsp;  
-**pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息**
+
+            *pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息 ! ! !*
+  
+    * void find_wind_starting_point(vector<pair<int,int> > &wind_points)
+
+        * 說明：比對本回合與上一回合資料，偵測怪物是否有被風吹過的跡象
+
+			> 以輸入參數wind_points儲存被風吹過的怪獸其原始位置：  
+				1. 缺少上一回合資料時，將不返還任何資料並輸出錯誤訊息  
+				2. 沒有偵測到被風吹過的怪獸時，將不儲存任何資料  
+				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置  
