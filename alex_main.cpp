@@ -467,20 +467,17 @@ int main()
         }
         cerr <<"--------------------------------------------------"<<endl;
 
-        Player::sort_monsters(Player::monsters, Player::near_mybase);
-
+        Player::sort_monsters(Player::monsters, Player::near_mybase); //依照怪物與基地距離排序
         cerr <<"Sort near mybase: "<<endl;
         for(auto m:Player::monsters)
         { cerr <<m.get_ID() <<" -> " << m-Player::my_Base << endl; }
 
-        Player::sort_monsters(Player::monsters, Player::near_enemybase);
-        
+        Player::sort_monsters(Player::monsters, Player::near_enemybase); //依照怪物與對方基地距離排序
         cerr <<"Sort near enemybase: "<<endl;
         for(auto m:Player::monsters)
         { cerr <<m.get_ID() <<" -> " << m-Player::enemy_Base << endl; }
 
-        Player::sort_monsters(Player::monsters, Player::less_health);
-
+        Player::sort_monsters(Player::monsters, Player::less_health);  //依照怪物剩餘血量排序
         cerr <<"Sort less health: "<<endl;
         for(auto m:Player::monsters)
         { cerr <<m.get_ID() <<" -> " << m.get_Health() << endl; }
