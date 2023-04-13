@@ -25,9 +25,9 @@
 	* vx, vy：下一步的向量
 	* nearBase：1&rarr;會往我的基地衝, 2&rarr;其他
 	* threatFor
-* Hero：
+* myHero：
 	* id：ID
-	* type = 0
+	* type = 1
 	* x, y：在地圖上的位置
 	* shieldLife：盾牌還剩多久
 	* isControlled：有被控制嗎？
@@ -35,6 +35,17 @@
 		* 0&rarr;在地圖空白區域
 		* 1&rarr;距離我的基地<5500
 		* 2&rarr;距離對方的基地<5500
+* enemyHero：
+	* id：ID
+	* type = 2
+	* x, y：在地圖上的位置
+	* shieldLife：盾牌還剩多久
+	* isControlled：有被控制嗎？
+	* **nearBase**：
+		* 0&rarr;在地圖空白區域
+		* 1&rarr;距離我的基地<5500
+		* 2&rarr;距離對方的基地<5500
+		
 > Entity, Hero和Monster之間可以用剪法操作：
 > `monster - my_base `
 > * 回傳值：他們之間的距離
@@ -55,6 +66,11 @@
 * Hero：來保存**hero**的資訊
 	* get_NearBase()：獲取其nearBase的數值
 	> hero的nearBase與monster的定義不同
+* action 用來記錄行為
+	* option "WAIT" "MOVE" "WIND" "CONTROL"
+	* id
+	* pair <int,int> 座標
+	> 可以將 action 給 cout ,ex : cout << (Action)a;
 * namespace::Player：
 	* void base_init( const int base_x)
 
@@ -95,15 +111,12 @@
 &emsp;&emsp;  
 **pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息**
 
-
 	* void find_wind_starting_point(vector<pair<int,int> > &wind_points)
 
-			* 說明：
-				比對本回合與上一回合資料，偵測怪物是否有被風吹過的跡象
+		* 說明：
+			比對本回合與上一回合資料，偵測怪物是否有被風吹過的跡象
 
-				> 以輸入參數wind_points儲存被風吹過的怪獸其原始位置：  
-						缺少上一回合資料時，將不返還任何資料並輸出錯誤訊息  
-						沒有偵測到被風吹過的怪獸時，將不儲存任何資料
-						偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置  
-
-						
+			> 以輸入參數wind_points儲存被風吹過的怪獸其原始位置：  
+				1. 缺少上一回合資料時，將不返還任何資料並輸出錯誤訊息  
+				2. 沒有偵測到被風吹過的怪獸時，將不儲存任何資料
+				3. 偵測到被風吹過的怪獸時，將依照monster的id順序儲存位置  
