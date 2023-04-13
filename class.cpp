@@ -90,7 +90,7 @@ class Hero : public Entity
         Hero() : Entity() { nearBase_ = -1; };
         Hero(const int &id, const int &type, const int &x, const int &y, const int &shield_life, const int &is_controlled, const int &health, const int &vx, const int &vy, const int &nearBase, const int &threatFor) : Entity(id, type, x, y, shield_life, is_controlled, health, vx, vy, nearBase, threatFor){};
         bool nearBase(Entity base) {
-            if(*this - base < 3000){
+            if(*this - base < 5500){
                 return true;
             }
             else{
@@ -157,8 +157,6 @@ namespace Player{
             my_Base = Entity(17630, 9000);
             enemy_Base = Entity(0, 0);
         }
-        cerr << my_Base.get_X() << my_Base.get_Y() << endl;
-        cerr << enemy_Base.get_X() << enemy_Base.get_Y() << endl;
         return;
     }
 
@@ -189,6 +187,18 @@ namespace Player{
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
             monsters.emplace_back(tmp);
+            if(near_base == 1)
+            {
+                my_monsters.emplace_back(tmp);
+            }
+            else if(near_base == 0)
+            {
+                enemy_monsters.emplace_back(tmp);
+            }
+            else if(near_base == 2)
+            {
+                neutral_monsters.emplace_back(tmp);
+            }
         }
     }
 
@@ -224,8 +234,6 @@ namespace Player{
         return;
     }
     bool compare_dist_mybase(Monsters first, Monsters second){
-        cerr << first-my_Base << second-my_Base << endl;
-        cerr << (first-my_Base < second-my_Base) << endl;
         return first-my_Base < second-my_Base;
     }
     bool compare_dist_enemybase(Monsters first, Monsters second){
@@ -236,7 +244,6 @@ namespace Player{
     }
 
     void sort_monsters( vector<Monsters> &m, const int &opt){
-        cerr << opt << endl;
         switch(opt)
         {
             case near_mybase:
@@ -256,6 +263,10 @@ namespace Player{
     }
     void enable_previous_info( const int &clip=0){
         map<int, Entity> tmp_map;
+         for(auto &e:my_heros)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
+         for(auto &e:enemy_heros)
+        {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
         for(auto &e:my_monsters)
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
         for(auto &e:enemy_monsters)
@@ -268,13 +279,14 @@ namespace Player{
         {
             previous_info.pop_back();
         }
-
     }
 
     void get_previous_info( const int &pre_num, map<int, Entity> &info){
-        if(pre_num > previous_info.size())
+        info.clear();
+        if(pre_num >= previous_info.size())
         {
-            cerr <<"pre_num out of list's size"<<endl;
+            cerr<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
+            cerr <<" => pre_num out of list's size !!!"<<endl;
             return;
         }
         else
@@ -299,21 +311,58 @@ namespace Player{
             auto it_1 = next(previous_info.begin(), 1);
             map<int, Entity> info_0 = *it_0;
             map<int, Entity> info_1 = *it_1;
-
+            /*
+            cerr << "winded id: ";
             for(auto m: info_0)
             {
-                if(info_1.find(m.first) != info_0.end() && m.second-info_1[m.first] >= 2200)
+                if(info_1.find(m.first) != info_1.end() && m.second-info_1[m.first] >= 2000)
                 {
                     wind_points.push_back(make_pair(info_1[m.first].get_X(), info_1[m.first].get_Y()) );
+                    cerr << m.first << " ";
                 }
             }
+            cerr<<endl;
+            */
         }
         return;
     }
 
-
-    pair<int ,int > &windPos(){
-
+    // 輸入r
+    // 隨機回傳在1/4圓中的任意位置
+    // 圓心：mybase
+    pair<int, int> random_pos_circle(int range)
+    {
+        int base_top_left = my_Base.get_X() == 0 ? 1 : 0; 
+        int theta;
+        if(base_top_left)
+        {
+            int minValue = 0;
+            int maxValue = 90;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        else
+        {
+            int minValue = 180;
+            int maxValue = 270;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        auto pi = acos(-1.0);
+        // 將角度轉為弧度
+        double radian = theta * pi / 180.0;
+        // generate number between 1 and range
+        int r = rand() % range + 1;
+        int x = r * cos(radian);
+        int y = r * sin(radian);
+        pair<int, int> tmp;
+        if(base_top_left)
+        {
+            tmp = make_pair(x, y);
+        }
+        else
+        {
+            tmp = make_pair(17639 + x, 9000+ y);
+        }
+        return tmp;
     }
 };
 
