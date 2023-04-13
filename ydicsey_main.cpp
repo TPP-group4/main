@@ -157,8 +157,6 @@ namespace Player{
             my_Base = Entity(17630, 9000);
             enemy_Base = Entity(0, 0);
         }
-        cerr << my_Base.get_X() << my_Base.get_Y() << endl;
-        cerr << enemy_Base.get_X() << enemy_Base.get_Y() << endl;
         return;
     }
 
@@ -188,6 +186,7 @@ namespace Player{
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
+            monsters.emplace_back(tmp);
             if(near_base == 1)
             {
                 my_monsters.emplace_back(tmp);
@@ -200,7 +199,6 @@ namespace Player{
             {
                 neutral_monsters.emplace_back(tmp);
             }
-            monsters.emplace_back(tmp);
         }
     }
 
@@ -236,8 +234,6 @@ namespace Player{
         return;
     }
     bool compare_dist_mybase(Monsters first, Monsters second){
-        cerr << first-my_Base << second-my_Base << endl;
-        cerr << (first-my_Base < second-my_Base) << endl;
         return first-my_Base < second-my_Base;
     }
     bool compare_dist_enemybase(Monsters first, Monsters second){
@@ -248,7 +244,6 @@ namespace Player{
     }
 
     void sort_monsters( vector<Monsters> &m, const int &opt){
-        cerr << opt << endl;
         switch(opt)
         {
             case near_mybase:
@@ -323,44 +318,45 @@ namespace Player{
         return;
     }
 
-    // 輸入r 
-    // 隨機回傳在1/4圓中的任意位置 
-    // 圓心：mybase 
-    pair<int, int> random_pos_circle(int range) 
-    { 
-        int base_top_left = my_Base.get_X() == 0 ? 1 : 0;  
-        int theta; 
-        if(base_top_left) 
-        { 
-            int minValue = 0; 
-            int maxValue = 90; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        }  
-        else 
-        { 
-            int minValue = 180; 
-            int maxValue = 270; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        } 
-        auto pi = acos(-1.0); 
-        // 將角度轉為弧度 
-        double radian = theta * pi / 180.0;  
-        // generate number between 1 and range 
-        int r = rand() % range + 1; 
-        int x = r * cos(radian); 
-        int y = r * sin(radian);  
-        pair<int, int> tmp; 
-        if(base_top_left) 
-        { 
-            tmp = make_pair(x, y); 
-        } 
-        else 
-        { 
-            tmp = make_pair(17639 + x, 9000+ y); 
-        } 
-        return tmp; 
-    } 
-}; 
+    // 輸入r
+    // 隨機回傳在1/4圓中的任意位置
+    // 圓心：mybase
+    pair<int, int> random_pos_circle(int range)
+    {
+        int base_top_left = my_Base.get_X() == 0 ? 1 : 0; 
+        int theta;
+        if(base_top_left)
+        {
+            int minValue = 0;
+            int maxValue = 90;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        else
+        {
+            int minValue = 180;
+            int maxValue = 270;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        auto pi = acos(-1.0);
+        // 將角度轉為弧度
+        double radian = theta * pi / 180.0;
+        // generate number between 1 and range
+        int r = rand() % range + 1;
+        int x = r * cos(radian);
+        int y = r * sin(radian);
+        pair<int, int> tmp;
+        if(base_top_left)
+        {
+            tmp = make_pair(x, y);
+        }
+        else
+        {
+            cerr << x << " " << y << endl;
+            tmp = make_pair(17639 + x, 9000+ y);
+        }
+        return tmp;
+    }
+};
 
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
@@ -382,4 +378,71 @@ ostream & operator <<(ostream &os, const action &a){
         os << "WAIT" << endl;
     }
     return os;
+}
+
+int main()
+{
+    // The corner of the map representing your base
+    int base_x; 
+    int base_y;
+
+    cin >> base_x >> base_y; cin.ignore();
+
+    // 判斷base在哪 //要不要包成Player::base_init
+    Player::base_init(base_x);
+    // Always 3
+    int heroes_per_player;                      
+    cin >> heroes_per_player; cin.ignore();
+
+    // game loop
+    while(1)
+    {
+        cin >> Player::my_health >> Player::my_mana; cin.ignore();
+        cin >> Player::enemy_health >> Player::enemy_mana; cin.ignore();
+
+        // Amount of heros and monsters you can see
+        int entity_count;
+        cin >> entity_count; cin.ignore();
+
+        for(int i = 0; i < entity_count; ++i)
+        {
+            int id; // Unique identifier
+            int type; // 0=monster, 1=your hero, 2=opponent hero
+            int x; // Position of this entity
+            int y;
+            int shield_life; // Ignore for this league; Count down until shield spell fades
+            int is_controlled; // Ignore for this league; Equals 1 when this entity is under a control spell
+            int health; // Remaining health of this monster
+            int vx; // Trajectory of this monster
+            int vy;
+            int near_base; // 0=monster with no target yet, 1=monster targeting a base
+            int threat_for; // Given this monster's trajectory, is it a threat to 1=your base, 2=your opponent's base, 0=neither
+            cin >> id >> type >> x >> y >> shield_life >> is_controlled >> health >> vx >> vy >> near_base >> threat_for; cin.ignore();
+        
+            Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
+        }
+        for(int i = 0; i < 3; ++i)
+        {
+            Monsters tmp = Player::find_nearest_monster(Player::my_Base ,Player::monsters);
+            cerr << tmp.get_ID() << endl;
+            if(Player::my_monsters.size())
+            {
+                if(tmp.get_ID() != -1)
+                {
+                    cout << "MOVE " << tmp.get_X() + tmp.get_VX()  << " " << tmp.get_Y() + tmp.get_VX() << endl;
+                }
+                else
+                {
+                    pair<int, int> tmp = Player::random_pos_circle(7500);
+                    cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+                }
+            }
+            else
+            {
+                pair<int, int> tmp = Player::random_pos_circle(7500);
+                cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+            }
+        }
+        Player::clearVector();
+    }
 }
