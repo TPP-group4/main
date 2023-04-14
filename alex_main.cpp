@@ -49,7 +49,7 @@ int main()
             Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
         }
 
-        Player::save_info();
+        Player::save_previous_info();
         info = Player::get_previous_info(0); //取得當前回合資訊
         info_1 = Player::get_previous_info(1);//取得上一回合資訊
         info_2 = Player::get_previous_info(2); //欲取得兩回合前資訊，超出enable_previous_info設定大小，會輸出錯誤訊息

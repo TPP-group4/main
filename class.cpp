@@ -267,7 +267,7 @@ namespace Player{
        clip_ = clip;
     }
     
-    void save_info()
+    void save_previous_info()
     {
         map<int, Entity> tmp_map;
          for(auto &e:my_heros)
