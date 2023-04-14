@@ -407,7 +407,7 @@ namespace Player{
         pair<int, int> tmp;
         if(base_top_left)
         {
-             tmp = make_pair(x + input_x, y + input_y);
+            tmp = make_pair(x + input_x, y + input_y);
         }
         else
         {
