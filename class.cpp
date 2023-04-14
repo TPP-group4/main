@@ -132,12 +132,14 @@ namespace Player{
     Entity my_Base;
     Entity enemy_Base;
     list<map<int, Entity>> previous_info;
-    vector<Monsters> my_monsters;
+    int clip_=0;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
+    vector<Monsters> monsters;
+    vector<Monsters> my_monsters;
     vector<Monsters> enemy_monsters;
     vector<Monsters> neutral_monsters;
-    vector<Monsters> monsters;
+    
     int my_health, my_mana;
     int enemy_health, enemy_mana;
     enum{
@@ -186,18 +188,6 @@ namespace Player{
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
-            if(near_base == 1)
-            {
-                my_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 0)
-            {
-                enemy_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 2)
-            {
-                neutral_monsters.emplace_back(tmp);
-            }
             monsters.emplace_back(tmp);
             if(near_base == 1)
             {
@@ -212,6 +202,7 @@ namespace Player{
                 neutral_monsters.emplace_back(tmp);
             }
         }
+        
     }
 
     Monsters find_nearest_monster(Entity e,vector<Monsters> M){
@@ -273,7 +264,12 @@ namespace Player{
 
         return;
     }
-    void enable_previous_info( const int &clip=0){
+    void enable_previous_info( const int &clip=1){
+       clip_ = clip;
+    }
+    
+    void save_previous_info()
+    {
         map<int, Entity> tmp_map;
          for(auto &e:my_heros)
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
@@ -287,35 +283,36 @@ namespace Player{
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
 
         previous_info.push_front(tmp_map);
-        if(previous_info.size() > clip+1)
+        if(previous_info.size() > clip_+1)
         {
             previous_info.pop_back();
         }
     }
 
-    void get_previous_info( const int &pre_num, map<int, Entity> &info){
+    map<int, Entity> get_previous_info( const int &pre_num){
+        map<int, Entity> info;
         info.clear();
         if(pre_num >= previous_info.size())
         {
             cerr<<"Info size error! "<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
             cerr <<" => pre_num out of list's size !!!"<<endl;
-            return;
+            return info;
         }
         else
         {
             auto it = next(previous_info.begin(), pre_num);
             info = *it;
-            return;
+            return info;
         }
     }
 
-    void find_wind_starting_point(vector<pair<int,int> > &wind_points){
+    bool find_wind_starting_point(vector<pair<int,int> > &wind_points){
         wind_points.clear();
         
         if(previous_info.size()<1)
         {
             cerr <<"Don't have enough previous info"<<endl;
-            return;
+            return false;
         }
         else
         {
@@ -335,8 +332,15 @@ namespace Player{
             }
             //cerr<<endl;
             
+            if(wind_points.size() != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        return;
     }
 
     // 輸入r 
