@@ -356,7 +356,56 @@ namespace Player{
         }
         return tmp;
     }
+
+    pair<int, int> random_circle_in_x_y(int range, int input_x, int input_y)
+    {
+        int base_top_left = my_Base.get_X() == 0 ? 1 : 0; 
+        int theta;
+        if(base_top_left)
+        {
+            int minValue = 0;
+            int maxValue = 90;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        else
+        {
+            int minValue = 180;
+            int maxValue = 270;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        auto pi = acos(-1.0);
+        // 將角度轉為弧度
+        double radian = theta * pi / 180.0;
+        // generate number between 1 and range
+        int r = rand() % range + 1;
+        int x = r * cos(radian);
+        int y = r * sin(radian);
+        pair<int, int> tmp;
+        if(base_top_left)
+        {
+            tmp = make_pair(x + input_x, y + input_y);
+        }
+        else
+        {
+            cerr << x << " " << y << endl;
+            tmp = make_pair(17639 + x + input_x, 9000 + y + input_y);
+        }
+        return tmp;
+    }
+
+    void chase_monster(Monsters M)
+    {
+        cout << "MOVE " << M.get_X() + M.get_VX() * 2 << " " << M.get_Y() + M.get_VY() * 2 << endl;
+    }
+
+    void cast_wind(int input_x, int input_y)
+    {
+        cout << "SPELL WIND " << input_x << " " << input_y << endl;
+    }
 };
+
+
+
 
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
@@ -424,23 +473,52 @@ int main()
         int my_clip = 2;
         Player::enable_previous_info( my_clip );
 
-        Player::sort_monsters(Player::monsters, 0);
-        
+        Player::sort_monsters(Player::monsters, Player::near_mybase);
+        for(auto i:Player::monsters)
+            cerr << i.get_ID() << " " << i - Player::my_Base <<endl<< endl;
 
+        
+        if( Player::my_monsters.size())
+            for(int i = 0; i <= Player::my_monsters.size() ; ++i)
+            { 
+                cerr << " " << Player::my_monsters[i].get_ID() << " " << Player::my_monsters[i] - Player::my_Base <<endl;
+                //cerr << " " << Player::my_monsters[1].get_ID() << " " << Player::my_monsters[1] - Player::my_Base <<endl;
+                //cerr << " " << Player::my_monsters[0].get_ID() << endl;
+            }
         for(int i = 0; i < 3; ++i)
         {
-            Monsters tmp = Player::find_nearest_monster(Player::my_Base ,Player::monsters);
-            cerr << tmp.get_ID() << endl;
-            if(Player::my_monsters.size() > i)
+            //Monsters tmp = Player::find_nearest_monster(Player::my_Base ,Player::monsters);
+            //cerr << tmp.get_ID() << endl;
+            if(Player::monsters.size() > 0)
             {
-                cerr << Player::my_monsters.size() << endl;
-                cout << "MOVE " << Player::my_monsters[i].get_X() << " " << Player::my_monsters[i].get_Y() << endl;
+                if(Player::monsters[0] - Player::my_Base < 3000 && Player::canWind(Player::my_heros[i],Player::monsters[0]) )
+                {
+
+                    Player::cast_wind(Player::enemy_Base.get_X(),Player::enemy_Base.get_Y());
+                }
+                //cerr << Player::monsters.size() << " " << Player::monsters[0].get_ID() << endl;
+                else
+                    Player::chase_monster(Player::monsters[0]);
+                //cout << "MOVE " << Player::my_monsters[0].get_X() << " " << Player::my_monsters[0].get_Y() << endl;
             }
             else
             {
-                //pair<int, int> tmp = Player::random_pos_circle(7500);
-                //cout << "MOVE " << tmp.first << " " << tmp.second << endl;
-                cout << "WAIT" << endl;
+                if(i == 0)
+                {    
+                    pair<int, int> tmp = Player::random_circle_in_x_y(4000,4000,1000);
+                    cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+                }
+                //cout << "WAIT" << endl;
+                else if(i == 1)
+                {
+                    pair<int, int> tmp = Player::random_circle_in_x_y(4000,3000,3000);
+                    cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+                }
+                else if(i == 2)
+                {
+                    pair<int, int> tmp = Player::random_circle_in_x_y(4000,900,4000);
+                    cout << "MOVE " << tmp.first << " " << tmp.second << endl;
+                }
             }
         }
         Player::clearVector();
