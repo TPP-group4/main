@@ -104,9 +104,9 @@
 
 			>   輸入參數opt可選擇排序依據：  
 			  
-					opt=0時，依照monster跟我方基地距離排序  
-					opt=1時，依照monster跟對方基地距離排序  
-					opt=2時，依照monster剩餘血量排序  
+					opt = mybase時，依照monster跟我方基地距離排序  
+					opt = enemybase時，依照monster跟對方基地距離排序  
+					opt = lesshealth時，依照monster剩餘血量排序  
 					...  
 				    預設opt = 0
 
@@ -115,10 +115,10 @@
         
 			> 輸入參數clip可決定儲存回和數：  
 			  
-					clip=0時，只儲存當前回合資訊  
-					clip=1時，將儲存當前回合及上一回合資訊  
-					...  
-				    預設clip = 0  
+				clip=0時，只儲存當前回合資訊  
+				clip=1時，將儲存當前回合及上一回合資訊  
+				...  
+				預設clip = 0  
   
 	* `void save_info()`
 		*說明：儲存每回合對方英雄與怪物的資訊，以關聯式容器(map)儲存物件(Entity)，鍵值為各物件的id
@@ -130,10 +130,10 @@
             
 			> 輸入參數pre_num可選擇要查看的回合： 
 			   
-					pre_num=0時，可查看當前回合  
-					pre_num=1時，可查看上一回合  
-					...   
-				    預設pre_num = 0  
+				pre_num=0時，可查看當前回合  
+				pre_num=1時，可查看上一回合  
+				...   
+				預設pre_num = 0  
 
             *pre_num大於儲存的回和數，將無法查看回合資訊看並輸出錯誤訊息 ! ! !*
   
