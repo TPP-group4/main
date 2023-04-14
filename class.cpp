@@ -133,12 +133,13 @@ namespace Player{
     Entity enemy_Base;
     list<map<int, Entity>> previous_info;
     int clip_=0;
-    vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
+    vector<Monsters> monsters;
+    vector<Monsters> my_monsters;
     vector<Monsters> enemy_monsters;
     vector<Monsters> neutral_monsters;
-    vector<Monsters> monsters;
+    
     int my_health, my_mana;
     int enemy_health, enemy_mana;
     enum{
@@ -263,7 +264,7 @@ namespace Player{
 
         return;
     }
-    void enable_previous_info( const int &clip=0){
+    void enable_previous_info( const int &clip=1){
        clip_ = clip;
     }
     
@@ -305,13 +306,13 @@ namespace Player{
         }
     }
 
-    void find_wind_starting_point(vector<pair<int,int> > &wind_points){
+    bool find_wind_starting_point(vector<pair<int,int> > &wind_points){
         wind_points.clear();
         
         if(previous_info.size()<1)
         {
             cerr <<"Don't have enough previous info"<<endl;
-            return;
+            return false;
         }
         else
         {
@@ -331,8 +332,15 @@ namespace Player{
             }
             //cerr<<endl;
             
+            if(wind_points.size() != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        return;
     }
 
     // 輸入r

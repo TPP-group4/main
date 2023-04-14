@@ -19,7 +19,7 @@ int main()
     map<int, Entity> info;
     map<int, Entity> info_1;
     map<int, Entity> info_2;
-    Player::enable_previous_info(1); //啟用功能，設定儲存回和數
+    Player::enable_previous_info(1); //啟用功能，設定儲存回合數
 
     // game loop
     while(1)
@@ -49,7 +49,7 @@ int main()
             Player::input(id , type , x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);
         }
 
-        Player::save_previous_info();
+        Player::save_previous_info();   //使用該函式儲存回和數
         info = Player::get_previous_info(0); //取得當前回合資訊
         info_1 = Player::get_previous_info(1);//取得上一回合資訊
         info_2 = Player::get_previous_info(2); //欲取得兩回合前資訊，超出enable_previous_info設定大小，會輸出錯誤訊息
@@ -70,15 +70,15 @@ int main()
         cerr<<endl;
         cerr <<"--------------------------------------------------"<<endl;
         
-        Player::find_wind_starting_point(wind_points); //確認是否有物件被吹風，並取得吹風起點
-
-        cerr <<"Found someone blowing winds: " << wind_points.size() << endl;
-        if(wind_points.size() > 0)
+        //確認是否有物件被吹風，並取得吹風起點 (要記得使用函式 Player::save_previous_info() )
+        if(Player::find_wind_starting_point(wind_points) )
         {
+            cerr <<"Found someone blowing winds: " << wind_points.size() << endl;
             for(auto p:wind_points)
             cerr <<"( "<< p.first<< ", " << p.second <<" )" <<  endl; //輸出吹風起點
-        }
-        cerr <<"--------------------------------------------------"<<endl;
+            
+            cerr <<"--------------------------------------------------"<<endl;
+        } 
 
         Player::sort_monsters(Player::monsters, Player::near_mybase); //依照怪物與基地距離排序
         cerr <<"Sort near mybase: "<<endl;
