@@ -132,6 +132,7 @@ namespace Player{
     Entity my_Base;
     Entity enemy_Base;
     list<map<int, Entity>> previous_info;
+    int clip_=0;
     vector<Monsters> my_monsters;
     vector<Hero> my_heros;
     vector<Hero> enemy_heros;
@@ -186,18 +187,6 @@ namespace Player{
         {
             // 1=your base, 2=your opponent's base, 0=neither
             Monsters tmp(id, type, x, y, shield_life, is_controlled, health, vx, vy, near_base, threat_for);       
-            if(near_base == 1)
-            {
-                my_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 0)
-            {
-                enemy_monsters.emplace_back(tmp);
-            }
-            else if(near_base == 2)
-            {
-                neutral_monsters.emplace_back(tmp);
-            }
             monsters.emplace_back(tmp);
             if(near_base == 1)
             {
@@ -212,6 +201,7 @@ namespace Player{
                 neutral_monsters.emplace_back(tmp);
             }
         }
+        
     }
 
     Monsters find_nearest_monster(Entity e,vector<Monsters> M){
@@ -274,6 +264,11 @@ namespace Player{
         return;
     }
     void enable_previous_info( const int &clip=0){
+       clip_ = clip;
+    }
+    
+    void save_info()
+    {
         map<int, Entity> tmp_map;
          for(auto &e:my_heros)
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
@@ -287,25 +282,26 @@ namespace Player{
         {   tmp_map.insert(pair< int, Entity> (e.get_ID(), e) ); }
 
         previous_info.push_front(tmp_map);
-        if(previous_info.size() > clip+1)
+        if(previous_info.size() > clip_+1)
         {
             previous_info.pop_back();
         }
     }
 
-    void get_previous_info( const int &pre_num, map<int, Entity> &info){
+    map<int, Entity> get_previous_info( const int &pre_num){
+        map<int, Entity> info;
         info.clear();
         if(pre_num >= previous_info.size())
         {
             cerr<<"Info size error! "<<"pre_num: "<< pre_num << ", previous info size: " << previous_info.size() <<endl;
             cerr <<" => pre_num out of list's size !!!"<<endl;
-            return;
+            return info;
         }
         else
         {
             auto it = next(previous_info.begin(), pre_num);
             info = *it;
-            return;
+            return info;
         }
     }
 
@@ -339,44 +335,44 @@ namespace Player{
         return;
     }
 
-    // 輸入r 
-    // 隨機回傳在1/4圓中的任意位置 
-    // 圓心：mybase 
-    pair<int, int> random_pos_circle(int range) 
-    { 
-        int base_top_left = my_Base.get_X() == 0 ? 1 : 0;  
-        int theta; 
-        if(base_top_left) 
-        { 
-            int minValue = 0; 
-            int maxValue = 90; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        }  
-        else 
-        { 
-            int minValue = 180; 
-            int maxValue = 270; 
-            theta = rand() % (maxValue - minValue + 1) + minValue; 
-        } 
-        auto pi = acos(-1.0); 
-        // 將角度轉為弧度 
-        double radian = theta * pi / 180.0;  
-        // generate number between 1 and range 
-        int r = rand() % range + 1; 
-        int x = r * cos(radian); 
-        int y = r * sin(radian);  
-        pair<int, int> tmp; 
-        if(base_top_left) 
-        { 
-            tmp = make_pair(x, y); 
-        } 
-        else 
-        { 
-            tmp = make_pair(17639 + x, 9000+ y); 
-        } 
-        return tmp; 
-    } 
-}; 
+    // 輸入r
+    // 隨機回傳在1/4圓中的任意位置
+    // 圓心：mybase
+    pair<int, int> random_pos_circle(int range)
+    {
+        int base_top_left = my_Base.get_X() == 0 ? 1 : 0; 
+        int theta;
+        if(base_top_left)
+        {
+            int minValue = 0;
+            int maxValue = 90;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        else
+        {
+            int minValue = 180;
+            int maxValue = 270;
+            theta = rand() % (maxValue - minValue + 1) + minValue;
+        }
+        auto pi = acos(-1.0);
+        // 將角度轉為弧度
+        double radian = theta * pi / 180.0;
+        // generate number between 1 and range
+        int r = rand() % range + 1;
+        int x = r * cos(radian);
+        int y = r * sin(radian);
+        pair<int, int> tmp;
+        if(base_top_left)
+        {
+            tmp = make_pair(x, y);
+        }
+        else
+        {
+            tmp = make_pair(17639 + x, 9000+ y);
+        }
+        return tmp;
+    }
+};
 
 ostream & operator <<(ostream &os, const action &a){
     if( a.option == "WAIT" ){
